@@ -9,10 +9,7 @@ const Header: React.FC = () => {
       <div className="logo">
         <img src={logo} alt="Logo" />
       </div>
-      <div className="button-container">
-        {/* add button text to const */}
-        <Button text="Logout" />
-      </div>
+      <div className="button-container">{/* <Button text="Logout" /> */}</div>
     </header>
   );
 };
