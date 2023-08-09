@@ -27,3 +27,5 @@ export const mockedCoursesList = [
     ],
   },
 ];
+
+export const mockedEmptyCoursesList = [];

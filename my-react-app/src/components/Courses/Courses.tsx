@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Course from "./components/CourseCard/CourseCard";
 import CourseInfo from "../CourseInfo/CourseInfo";
+import EmptyCourseList from "../EmptyCourseList/EmptyCourseList";
 
 interface CourseData {
   id: string;
@@ -30,6 +31,8 @@ const Courses: React.FC<CoursesProps> = ({ courses }) => {
     <div className="courses">
       {selectedCourse ? (
         <CourseInfo {...selectedCourse} onBackToCourses={handleBackToCourses} />
+      ) : courses.length === 0 ? (
+        <EmptyCourseList />
       ) : (
         courses.map((course) => (
           <Course

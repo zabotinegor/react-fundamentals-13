@@ -1,9 +1,9 @@
 import React from "react";
 import Button from "../../common/Button/Button";
-import { mockedAuthorsList } from "../../mocks/Authors";
 import { formatDuration } from "../../helpers/getCourseDuration";
 import { formatDate } from "../../helpers/formatDate";
 import "./CourseInfo.css";
+import { getAuthorsList } from "../../helpers/getAuthorsList";
 
 interface CourseInfoProps {
   id: string;
@@ -24,13 +24,6 @@ const CourseInfo: React.FC<CourseInfoProps> = ({
   creationDate,
   onBackToCourses,
 }) => {
-  const authorMap = new Map(
-    mockedAuthorsList.map((author) => [author.id, author.name])
-  );
-  const authorsList = authors
-    .map((authorId) => authorMap.get(authorId))
-    .join(", ");
-
   return (
     <div className="course">
       <h2 className="course-title">{title}</h2>
@@ -40,7 +33,7 @@ const CourseInfo: React.FC<CourseInfoProps> = ({
         </div>
         <div className="course-details-content">
           <p>ID: {id}</p>
-          <p className="authors-list">{authorsList}</p>
+          <p className="authors-list">{getAuthorsList(authors)}</p>
           <p>Duration: {formatDuration(duration)}</p>
           <p>Creation Date: {formatDate(creationDate)}</p>
           <Button text="Back to Courses" onClick={onBackToCourses} />

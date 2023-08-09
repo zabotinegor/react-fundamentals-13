@@ -3,7 +3,7 @@ import "./CourseCard.css";
 import Button from "../../../../common/Button/Button";
 import { formatDuration } from "../../../../helpers/getCourseDuration";
 import { formatDate } from "../../../../helpers/formatDate";
-import { mockedAuthorsList } from "../../../../mocks/Authors";
+import { getAuthorsList } from "../../../../helpers/getAuthorsList";
 
 interface CourseProps {
   title: string;
@@ -22,13 +22,6 @@ const Course: React.FC<CourseProps> = ({
   authors,
   onShowCourseInfo,
 }) => {
-  const authorMap = new Map(
-    mockedAuthorsList.map((author) => [author.id, author.name])
-  );
-  const authorsList = authors
-    .map((authorId) => authorMap.get(authorId))
-    .join(", ");
-
   return (
     <div className="course">
       <h2 className="course-title">{title}</h2>
@@ -37,7 +30,7 @@ const Course: React.FC<CourseProps> = ({
           <p>{description}</p>
         </div>
         <div className="course-details-content">
-          <p className="authors-list">{authorsList}</p>
+          <p className="authors-list">{getAuthorsList(authors)}</p>
           <p>Duration: {formatDuration(duration)}</p>
           <p>Creation Date: {formatDate(creationDate)}</p>
           <Button text="Show Course" onClick={onShowCourseInfo} />
