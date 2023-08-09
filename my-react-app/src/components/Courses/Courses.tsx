@@ -1,7 +1,9 @@
-import React from "react";
-import CourseCard from "./components/CourseCard/CourseCard";
+import React, { useState } from "react";
+import Course from "./components/CourseCard/CourseCard";
+import CourseInfo from "../CourseInfo/CourseInfo";
 
-interface Course {
+interface CourseData {
+  id: string;
   title: string;
   duration: number;
   creationDate: string;
@@ -10,15 +12,33 @@ interface Course {
 }
 
 interface CoursesProps {
-  courses: Course[];
+  courses: CourseData[];
 }
 
 const Courses: React.FC<CoursesProps> = ({ courses }) => {
+  const [selectedCourse, setSelectedCourse] = useState<CourseData | null>(null);
+
+  const handleShowCourseInfo = (course: CourseData) => {
+    setSelectedCourse(course);
+  };
+
+  const handleBackToCourses = () => {
+    setSelectedCourse(null);
+  };
+
   return (
     <div className="courses">
-      {courses.map((course, index) => (
-        <CourseCard key={index} {...course} />
-      ))}
+      {selectedCourse ? (
+        <CourseInfo {...selectedCourse} onBackToCourses={handleBackToCourses} />
+      ) : (
+        courses.map((course) => (
+          <Course
+            key={course.id}
+            {...course}
+            onShowCourseInfo={() => handleShowCourseInfo(course)}
+          />
+        ))
+      )}
     </div>
   );
 };

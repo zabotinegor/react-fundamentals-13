@@ -1,26 +1,28 @@
 import React from "react";
-import "./CourseCard.css";
-import Button from "../../../../common/Button/Button";
-import { formatDuration } from "../../../../helpers/getCourseDuration";
-import { formatDate } from "../../../../helpers/formatDate";
-import { mockedAuthorsList } from "../../../../mocks/Authors";
+import Button from "../../common/Button/Button";
+import { mockedAuthorsList } from "../../mocks/Authors";
+import { formatDuration } from "../../helpers/getCourseDuration";
+import { formatDate } from "../../helpers/formatDate";
+import "./CourseInfo.css";
 
-interface CourseProps {
+interface CourseInfoProps {
+  id: string;
   title: string;
-  duration: number;
-  creationDate: string;
   description: string;
+  duration: number;
   authors: string[];
-  onShowCourseInfo: () => void;
+  creationDate: string;
+  onBackToCourses: () => void;
 }
 
-const Course: React.FC<CourseProps> = ({
+const CourseInfo: React.FC<CourseInfoProps> = ({
+  id,
   title,
-  duration,
-  creationDate,
   description,
+  duration,
   authors,
-  onShowCourseInfo,
+  creationDate,
+  onBackToCourses,
 }) => {
   const authorMap = new Map(
     mockedAuthorsList.map((author) => [author.id, author.name])
@@ -37,14 +39,15 @@ const Course: React.FC<CourseProps> = ({
           <p>{description}</p>
         </div>
         <div className="course-details-content">
+          <p>ID: {id}</p>
           <p className="authors-list">{authorsList}</p>
           <p>Duration: {formatDuration(duration)}</p>
           <p>Creation Date: {formatDate(creationDate)}</p>
-          <Button text="Show Course" onClick={onShowCourseInfo} />
+          <Button text="Back to Courses" onClick={onBackToCourses} />
         </div>
       </div>
     </div>
   );
 };
 
-export default Course;
+export default CourseInfo;
