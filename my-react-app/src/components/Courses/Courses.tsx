@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import Course from "./components/CourseCard/CourseCard";
 import CourseInfo from "../CourseInfo/CourseInfo";
 import EmptyCourseList from "../EmptyCourseList/EmptyCourseList";
+import SearchBar from "../SearchBar/SearchBar";
+import "./Courses.css";
 
 interface CourseData {
   id: string;
@@ -34,13 +36,20 @@ const Courses: React.FC<CoursesProps> = ({ courses }) => {
       ) : courses.length === 0 ? (
         <EmptyCourseList />
       ) : (
-        courses.map((course) => (
-          <Course
-            key={course.id}
-            {...course}
-            onShowCourseInfo={() => handleShowCourseInfo(course)}
-          />
-        ))
+        <div>
+          <div className="search-bar-container">
+            <SearchBar />
+          </div>
+          <div className="courses-list">
+            {courses.map((course) => (
+              <Course
+                key={course.id}
+                {...course}
+                onShowCourseInfo={() => handleShowCourseInfo(course)}
+              />
+            ))}
+          </div>
+        </div>
       )}
     </div>
   );
