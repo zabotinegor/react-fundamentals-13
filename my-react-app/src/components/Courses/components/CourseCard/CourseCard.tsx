@@ -1,18 +1,13 @@
 import React from "react";
 import "./CourseCard.css";
-import Button from "../../common/Button/Button";
-
-interface Author {
-  name: string;
-}
+import Button from "../../../../common/Button/Button";
 
 interface CourseProps {
   title: string;
-  duration: string;
+  duration: number;
   creationDate: string;
   description: string;
-  showCourseButton: boolean;
-  authors: Author[];
+  authors: string[];
 }
 
 const Course: React.FC<CourseProps> = ({
@@ -20,12 +15,11 @@ const Course: React.FC<CourseProps> = ({
   duration,
   creationDate,
   description,
-  showCourseButton,
   authors,
 }) => {
   const authorsList = authors.map((author, index) => (
     <span key={index} className="author">
-      {author.name}
+      {author}
     </span>
   ));
 
@@ -40,7 +34,7 @@ const Course: React.FC<CourseProps> = ({
           <p className="authors-list">{authorsList}</p>
           <p>Duration: {duration}</p>
           <p>Creation Date: {creationDate}</p>
-          {showCourseButton && <Button text="Show Course" />}
+          <Button text="Show Course" />
         </div>
       </div>
     </div>

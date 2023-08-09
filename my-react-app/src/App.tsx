@@ -1,26 +1,12 @@
-import Course from "./components/CourseCard/CourseCard";
+import Courses from "./components/Courses/Courses";
 import Header from "./components/Header/Header";
-
-const authors = [
-  { name: "Author 1" },
-  { name: "Author 2" },
-  { name: "Author 3" },
-  { name: "Author 4" },
-  { name: "Author 5" },
-];
+import { mockedCoursesList } from "./mocks/Courses";
 
 function App() {
   return (
     <div className="App">
       <Header />
-      <Course
-        title="Introduction to React"
-        duration="2:30 hours"
-        creationDate="15.07.2023"
-        description="Learn the basics of React programming."
-        showCourseButton={true}
-        authors={authors}
-      />
+      <Courses courses={mockedCoursesList} />
     </div>
   );
 }
