@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Course from "./components/CourseCard/CourseCard";
 import CourseInfo from "../CourseInfo/CourseInfo";
 import EmptyCourseList from "../EmptyCourseList/EmptyCourseList";
 import SearchBar from "../SearchBar/SearchBar";
+
 import "./Courses.css";
 
 interface CourseData {
@@ -20,6 +21,19 @@ interface CoursesProps {
 
 const Courses: React.FC<CoursesProps> = ({ courses }) => {
   const [selectedCourse, setSelectedCourse] = useState<CourseData | null>(null);
+  const [searchTerm, setSearchTerm] = useState<string>("");
+  const [filteredCourses, setFilteredCourses] = useState<CourseData[]>([]);
+
+  useEffect(() => {
+    const lowerCaseSearchTerm = searchTerm.toLowerCase();
+    const newFilteredCourses = courses.filter((course) => {
+      return (
+        course.title.toLowerCase().includes(lowerCaseSearchTerm) ||
+        course.id.toLowerCase().includes(lowerCaseSearchTerm)
+      );
+    });
+    setFilteredCourses(newFilteredCourses);
+  }, [courses, searchTerm]);
 
   const handleShowCourseInfo = (course: CourseData) => {
     setSelectedCourse(course);
@@ -27,28 +41,33 @@ const Courses: React.FC<CoursesProps> = ({ courses }) => {
 
   const handleBackToCourses = () => {
     setSelectedCourse(null);
+    setSearchTerm("");
+  };
+
+  const handleSearch = (searchTerm: string) => {
+    setSearchTerm(searchTerm);
   };
 
   return (
     <div className="courses">
       {selectedCourse ? (
         <CourseInfo {...selectedCourse} onBackToCourses={handleBackToCourses} />
-      ) : courses.length === 0 ? (
-        <EmptyCourseList />
       ) : (
         <div>
-          <div className="search-bar-container">
-            <SearchBar />
-          </div>
-          <div className="courses-list">
-            {courses.map((course) => (
-              <Course
-                key={course.id}
-                {...course}
-                onShowCourseInfo={() => handleShowCourseInfo(course)}
-              />
-            ))}
-          </div>
+          <SearchBar onSearch={handleSearch} onReset={handleBackToCourses} />
+          {filteredCourses.length === 0 || courses.length === 0 ? (
+            <EmptyCourseList />
+          ) : (
+            <div className="courses-list">
+              {filteredCourses.map((course) => (
+                <Course
+                  key={course.id}
+                  {...course}
+                  onShowCourseInfo={() => handleShowCourseInfo(course)}
+                />
+              ))}
+            </div>
+          )}
         </div>
       )}
     </div>
