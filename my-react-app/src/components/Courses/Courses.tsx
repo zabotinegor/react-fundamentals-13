@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import Course from "./components/CourseCard/CourseCard";
 import CourseInfo from "../CourseInfo/CourseInfo";
 import EmptyCourseList from "../EmptyCourseList/EmptyCourseList";
@@ -22,9 +22,10 @@ interface CoursesProps {
 const Courses: React.FC<CoursesProps> = ({ courses }) => {
   const [selectedCourse, setSelectedCourse] = useState<CourseData | null>(null);
   const [searchTerm, setSearchTerm] = useState<string>("");
-  const [filteredCourses, setFilteredCourses] = useState<CourseData[]>([]);
+  // Pass courses in state
+  const [filteredCourses, setFilteredCourses] = useState<CourseData[]>(courses);
 
-  useEffect(() => {
+  const handleSearchBar = () => {
     const lowerCaseSearchTerm = searchTerm.toLowerCase();
     const newFilteredCourses = courses.filter((course) => {
       return (
@@ -33,7 +34,19 @@ const Courses: React.FC<CoursesProps> = ({ courses }) => {
       );
     });
     setFilteredCourses(newFilteredCourses);
-  }, [courses, searchTerm]);
+  };
+
+  // useEffect(() => {
+  // const lowerCaseSearchTerm = searchTerm.toLowerCase();
+  // const newFilteredCourses = courses.filter((course) => {
+  //   return (
+  //     course.title.toLowerCase().includes(lowerCaseSearchTerm) ||
+  //     course.id.toLowerCase().includes(lowerCaseSearchTerm)
+  //   );
+  // });
+  // setFilteredCourses(newFilteredCourses);
+
+  // }, [searchTerm]);
 
   const handleShowCourseInfo = (course: CourseData) => {
     setSelectedCourse(course);
@@ -44,9 +57,9 @@ const Courses: React.FC<CoursesProps> = ({ courses }) => {
     setSearchTerm("");
   };
 
-  const handleSearch = (searchTerm: string) => {
-    setSearchTerm(searchTerm);
-  };
+  // const handleSearch = (searchTerm: string) => {
+  //   setSearchTerm(searchTerm);
+  // };
 
   return (
     <div className="courses">
@@ -54,7 +67,13 @@ const Courses: React.FC<CoursesProps> = ({ courses }) => {
         <CourseInfo {...selectedCourse} onBackToCourses={handleBackToCourses} />
       ) : (
         <div>
-          <SearchBar onSearch={handleSearch} onReset={handleBackToCourses} />
+          <SearchBar
+            searchTerm={searchTerm}
+            setSearchTerm={setSearchTerm}
+            // onSearch={handleSearch}
+            onSearch={handleSearchBar}
+            onReset={handleBackToCourses}
+          />
           {filteredCourses.length === 0 || courses.length === 0 ? (
             <EmptyCourseList />
           ) : (
