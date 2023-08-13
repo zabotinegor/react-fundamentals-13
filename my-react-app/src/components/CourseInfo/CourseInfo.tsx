@@ -4,6 +4,7 @@ import { formatDuration } from "../../helpers/getCourseDuration";
 import { formatDate } from "../../helpers/formatDate";
 import "./CourseInfo.css";
 import { getAuthorsList } from "../../helpers/getAuthorsList";
+import { mockedAuthorsList } from "../../mocks/Authors";
 
 interface CourseInfoProps {
   id: string;
@@ -33,7 +34,9 @@ const CourseInfo: React.FC<CourseInfoProps> = ({
         </div>
         <div className="course-details-content">
           <p>ID: {id}</p>
-          <p className="authors-list">{getAuthorsList(authors)}</p>
+          <p className="authors-list">
+            {getAuthorsList(authors, mockedAuthorsList)}
+          </p>
           <p>Duration: {formatDuration(duration)}</p>
           <p>Creation Date: {formatDate(creationDate)}</p>
           <Button text="Back to Courses" onClick={onBackToCourses} />

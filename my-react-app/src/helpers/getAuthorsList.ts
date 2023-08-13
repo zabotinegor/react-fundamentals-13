@@ -1,8 +1,14 @@
-import { mockedAuthorsList } from "../mocks/Authors";
+interface Author {
+  id: string;
+  name: string;
+}
 
-export function getAuthorsList(authors: string[]): string {
+export function getAuthorsList(
+  authors: string[],
+  authorList: Author[]
+): string {
   const authorMap = new Map(
-    mockedAuthorsList.map((author) => [author.id, author.name])
+    authorList.map((author) => [author.id, author.name])
   );
 
   return authors.map((authorId) => authorMap.get(authorId)).join(", ");
