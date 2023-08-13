@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Course from "./components/CourseCard/CourseCard";
 import CourseInfo from "../CourseInfo/CourseInfo";
 import EmptyCourseList from "../EmptyCourseList/EmptyCourseList";
-import SearchBar from "../SearchBar/SearchBar";
+import SearchBar from "./components/SearchBar/SearchBar";
 
 import "./Courses.css";
 
