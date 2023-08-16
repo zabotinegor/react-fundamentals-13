@@ -1,11 +1,11 @@
-import Courses from "./components/Courses/Courses";
 import Header from "./components/Header/Header";
+import Login from "./components/Login/Login";
 
 function App() {
   return (
     <div className="App">
       <Header />
-      <Courses />
+      <Login />
     </div>
   );
 }
