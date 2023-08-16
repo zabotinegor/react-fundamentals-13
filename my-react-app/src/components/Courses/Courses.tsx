@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import Course from "./components/CourseCard/CourseCard";
 import CourseInfo from "../CourseInfo/CourseInfo";
 import EmptyCourseList from "../EmptyCourseList/EmptyCourseList";
@@ -15,25 +16,48 @@ interface CourseData {
   authors: string[];
 }
 
-interface CoursesProps {
-  courses: CourseData[];
-}
-
-const Courses: React.FC<CoursesProps> = ({ courses }) => {
+const Courses: React.FC = () => {
   const [selectedCourse, setSelectedCourse] = useState<CourseData | null>(null);
+  // Q1. Is it still necessary? Or can we do away with the work of methods with parameters?
   const [searchTerm, setSearchTerm] = useState<string>("");
-  const [filteredCourses, setFilteredCourses] = useState<CourseData[]>(courses);
+  const [courses, setCourses] = useState<CourseData[]>([]);
+
+  // Q2. Why does this endpoint request go twice on page load?
+  useEffect(() => {
+    getCourses();
+  }, []);
 
   const handleSearchBar = () => {
     const lowerCaseSearchTerm = searchTerm.toLowerCase();
-    const newFilteredCourses = courses.filter((course) => {
-      return (
-        course.title.toLowerCase().includes(lowerCaseSearchTerm) ||
-        course.id.toLowerCase().includes(lowerCaseSearchTerm)
-      );
-    });
 
-    setFilteredCourses(newFilteredCourses);
+    if (lowerCaseSearchTerm === "") {
+      getCourses();
+    } else {
+      getFilteredCourses();
+    }
+  };
+
+  const getCourses = () => {
+    axios
+      // Q3. Can we take the root url out somewhere?
+      .get("http://localhost:4000/courses/all")
+      .then((response) => {
+        setCourses(response.data.result);
+      })
+      .catch((error) => {
+        console.error("Error fetching course data:", error);
+      });
+  };
+
+  const getFilteredCourses = () => {
+    axios
+      .get(`http://localhost:4000/courses/filter?title=${searchTerm}`)
+      .then((response) => {
+        setCourses(response.data.result);
+      })
+      .catch((error) => {
+        console.error("Error fetching filtered course data:", error);
+      });
   };
 
   const handleShowCourseInfo = (course: CourseData) => {
@@ -57,11 +81,11 @@ const Courses: React.FC<CoursesProps> = ({ courses }) => {
             onSearch={handleSearchBar}
             onReset={handleBackToCourses}
           />
-          {filteredCourses.length === 0 || courses.length === 0 ? (
+          {courses.length === 0 ? (
             <EmptyCourseList />
           ) : (
             <div className="courses-list">
-              {filteredCourses.map((course) => (
+              {courses.map((course) => (
                 <Course
                   key={course.id}
                   {...course}
