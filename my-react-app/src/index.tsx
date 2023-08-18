@@ -13,8 +13,8 @@ const root = ReactDOM.createRoot(
 
 root.render(
   <BrowserRouter>
-    <App />
     <Routes>
+      <Route path="/" element={<App />} />
       <Route path="courses" element={<Courses />} />
       <Route path="login" element={<Login />} />
       <Route path="register" element={<Registration />} />
