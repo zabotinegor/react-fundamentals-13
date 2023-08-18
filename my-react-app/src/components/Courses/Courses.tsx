@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Course from "./components/CourseCard/CourseCard";
-import CourseInfo from "../CourseInfo/CourseInfo";
 import EmptyCourseList from "../EmptyCourseList/EmptyCourseList";
 import SearchBar from "./components/SearchBar/SearchBar";
+import { useNavigate } from "react-router-dom";
 
 import "./Courses.css";
 
@@ -17,12 +17,10 @@ interface CourseData {
 }
 
 const Courses: React.FC = () => {
-  const [selectedCourse, setSelectedCourse] = useState<CourseData | null>(null);
-  // Q1. Is it still necessary? Or can we do away with the work of methods with parameters?
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [courses, setCourses] = useState<CourseData[]>([]);
+  const navigate = useNavigate();
 
-  // Q2. Why does this endpoint request go twice on page load?
   useEffect(() => {
     getCourses();
   }, []);
@@ -39,7 +37,6 @@ const Courses: React.FC = () => {
 
   const getCourses = () => {
     axios
-      // Q3. Can we take the root url out somewhere?
       .get("http://localhost:4000/courses/all")
       .then((response) => {
         setCourses(response.data.result);
@@ -60,40 +57,32 @@ const Courses: React.FC = () => {
       });
   };
 
-  const handleShowCourseInfo = (course: CourseData) => {
-    setSelectedCourse(course);
-  };
-
   const handleBackToCourses = () => {
-    setSelectedCourse(null);
     setSearchTerm("");
+    navigate("/courses", { replace: true });
   };
 
   return (
     <div className="courses">
-      {selectedCourse ? (
-        <CourseInfo {...selectedCourse} onBackToCourses={handleBackToCourses} />
+      <SearchBar
+        searchTerm={searchTerm}
+        setSearchTerm={setSearchTerm}
+        onSearch={handleSearchBar}
+        onReset={handleBackToCourses}
+      />
+      {courses.length === 0 ? (
+        <EmptyCourseList />
       ) : (
-        <div>
-          <SearchBar
-            searchTerm={searchTerm}
-            setSearchTerm={setSearchTerm}
-            onSearch={handleSearchBar}
-            onReset={handleBackToCourses}
-          />
-          {courses.length === 0 ? (
-            <EmptyCourseList />
-          ) : (
-            <div className="courses-list">
-              {courses.map((course) => (
-                <Course
-                  key={course.id}
-                  {...course}
-                  onShowCourseInfo={() => handleShowCourseInfo(course)}
-                />
-              ))}
-            </div>
-          )}
+        <div className="courses-list">
+          {courses.map((course) => (
+            <Course
+              key={course.id}
+              {...course}
+              onShowCourseInfo={() =>
+                navigate(`/courses/${course.id}`, { replace: true })
+              }
+            />
+          ))}
         </div>
       )}
     </div>

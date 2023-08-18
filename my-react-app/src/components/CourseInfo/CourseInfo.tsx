@@ -1,47 +1,66 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Button from "../../common/Button/Button";
 import { formatDuration } from "../../helpers/getCourseDuration";
 import { formatDate } from "../../helpers/formatDate";
-import "./CourseInfo.css";
 import { getAuthorsList } from "../../helpers/getAuthorsList";
 import { mockedAuthorsList } from "../../mocks/Authors";
+import { useParams, useNavigate } from "react-router-dom";
+import axios from "axios";
 
-interface CourseInfoProps {
+import "./CourseInfo.css";
+
+interface CourseData {
   id: string;
   title: string;
   description: string;
   duration: number;
   authors: string[];
   creationDate: string;
-  onBackToCourses: () => void;
 }
 
-const CourseInfo: React.FC<CourseInfoProps> = ({
-  id,
-  title,
-  description,
-  duration,
-  authors,
-  creationDate,
-  onBackToCourses,
-}) => {
+const CourseInfo: React.FC = () => {
+  const { courseId } = useParams<{ courseId: string }>();
+  const [course, setCourse] = useState<CourseData | null>(null);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    axios
+      .get(`http://localhost:4000/courses/${courseId}`)
+      .then((response) => {
+        setCourse(response.data.result);
+      })
+      .catch((error) => {
+        console.error("Error fetching course data:", error);
+      });
+  }, [courseId]);
+
+  const handleBackToCourses = () => {
+    navigate("/courses");
+  };
+
   return (
     <div className="course">
-      <h2 className="course-title">{title}</h2>
-      <div className="course-details">
-        <div className="course-description">
-          <p>{description}</p>
-        </div>
-        <div className="course-details-content">
-          <p>ID: {id}</p>
-          <p className="authors-list">
-            {getAuthorsList(authors, mockedAuthorsList)}
-          </p>
-          <p>Duration: {formatDuration(duration)}</p>
-          <p>Creation Date: {formatDate(creationDate)}</p>
-          <Button text="Back to Courses" onClick={onBackToCourses} />
-        </div>
-      </div>
+      {course ? (
+        <>
+          <h2 className="course-title">{course.title}</h2>
+          <div className="course-details">
+            <div className="course-description">
+              <p>{course.description}</p>
+            </div>
+            <div className="course-details-content">
+              <p>ID: {course.id}</p>
+              <p className="authors-list">
+                {getAuthorsList(course.authors, mockedAuthorsList)}
+              </p>
+              <p>Duration: {formatDuration(course.duration)}</p>
+              <p>Creation Date: {formatDate(course.creationDate)}</p>
+              <Button text="Back to Courses" onClick={handleBackToCourses} />
+            </div>
+          </div>
+        </>
+      ) : (
+        <p>Loading course information...</p>
+      )}
     </div>
   );
 };
