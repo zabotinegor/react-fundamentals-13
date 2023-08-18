@@ -35,6 +35,7 @@ const Login: React.FC = () => {
 
       const data = await response.json();
       localStorage.setItem("token", data.result);
+      localStorage.setItem("userName", data.user.name);
       navigate("/courses", { replace: true });
     } catch (error) {
       console.error("Login error:", error);

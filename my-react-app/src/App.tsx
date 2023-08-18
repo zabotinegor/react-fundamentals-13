@@ -1,5 +1,11 @@
 import { useEffect } from "react";
-import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
+import {
+  Navigate,
+  Route,
+  Routes,
+  useLocation,
+  useNavigate,
+} from "react-router-dom";
 import Header from "./components/Header/Header";
 import Courses from "./components/Courses/Courses";
 import CourseInfo from "./components/CourseInfo/CourseInfo";
@@ -8,10 +14,11 @@ import Registration from "./components/Registration/Registration";
 
 function App() {
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    if (!token) {
+    if (!token && location.pathname !== "/register") {
       navigate("/login", { replace: true });
     }
   }, [navigate]);
