@@ -3,6 +3,7 @@ import Input from "../../common/Input/Input";
 import Button from "../../common/Button/Button";
 import { generateGUID } from "../../helpers/generateGUID";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 import "./CreateCourse.css";
 
@@ -25,7 +26,7 @@ const CreateCourse: React.FC = () => {
   const [authors, setAuthors] = useState<Author[]>([]);
   const [newAuthorName, setNewAuthorName] = useState<string>("");
   const [errors, setErrors] = useState<string[]>([]);
-
+  const navigate = useNavigate();
   const createCourse = async (courseData: Course, token: string) => {
     try {
       const response = await axios.post(
@@ -136,6 +137,8 @@ const CreateCourse: React.FC = () => {
     courseData.authors = authorIds;
 
     await createCourse(courseData, token);
+
+    navigate("/courses", { replace: true });
   };
 
   const handleAddAuthor = (e: React.MouseEvent) => {

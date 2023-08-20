@@ -75,9 +75,11 @@ const Courses: React.FC = () => {
         onSearch={handleSearchBar}
         onReset={handleBackToCourses}
       />
-      <div className="add-course-button-container">
-        <Button text="Add New Course" onClick={handleAddCourse} />
-      </div>
+      {courses.length !== 0 && (
+        <div className="add-course-button-container">
+          <Button text="Add New Course" onClick={handleAddCourse} />
+        </div>
+      )}
       {courses.length === 0 ? (
         <EmptyCourseList />
       ) : (
