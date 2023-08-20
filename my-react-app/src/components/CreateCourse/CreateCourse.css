@@ -1,0 +1,71 @@
+.create-course-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+}
+
+.create-course-title {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.create-course-form {
+  width: 100%;
+  max-width: 600px;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+}
+
+.create-course-field {
+  margin-bottom: 15px;
+}
+
+.create-course-label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.create-course-input,
+.create-course-textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-sizing: border-box;
+  resize: vertical;
+}
+
+.create-course-authors {
+  margin-bottom: 15px;
+}
+
+.create-course-author-name {
+  font-weight: bold;
+}
+
+.create-course-errors {
+  margin-bottom: 15px;
+  color: red;
+}
+
+.create-course-error {
+  margin: 5px 0;
+}
+
+.create-course-field .create-add-author-button {
+  margin-top: 10px;
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.create-course-field .create-add-author-button:hover {
+  background-color: #0056b3;
+}
