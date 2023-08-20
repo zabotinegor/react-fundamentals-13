@@ -4,6 +4,7 @@ import Course from "./components/CourseCard/CourseCard";
 import EmptyCourseList from "../EmptyCourseList/EmptyCourseList";
 import SearchBar from "./components/SearchBar/SearchBar";
 import { useNavigate } from "react-router-dom";
+import Button from "../../common/Button/Button";
 
 import "./Courses.css";
 
@@ -62,6 +63,10 @@ const Courses: React.FC = () => {
     navigate("/courses", { replace: true });
   };
 
+  const handleAddCourse = () => {
+    navigate("/courses/add", { replace: true });
+  };
+
   return (
     <div className="courses">
       <SearchBar
@@ -70,6 +75,9 @@ const Courses: React.FC = () => {
         onSearch={handleSearchBar}
         onReset={handleBackToCourses}
       />
+      <div className="add-course-button-container">
+        <Button text="Add New Course" onClick={handleAddCourse} />
+      </div>
       {courses.length === 0 ? (
         <EmptyCourseList />
       ) : (
