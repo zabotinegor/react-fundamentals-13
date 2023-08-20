@@ -60,7 +60,7 @@ const CourseInfo: React.FC = () => {
           </div>
         </>
       ) : (
-        <p>Loading course information...</p>
+        <p>Course was not found.</p>
       )}
     </div>
   );

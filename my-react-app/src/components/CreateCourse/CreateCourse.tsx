@@ -28,6 +28,7 @@ const CreateCourse: React.FC = () => {
   const [newAuthorName, setNewAuthorName] = useState<string>("");
   const [errors, setErrors] = useState<string[]>([]);
   const navigate = useNavigate();
+
   const createCourse = async (courseData: Course, token: string) => {
     try {
       const response = await axios.post(

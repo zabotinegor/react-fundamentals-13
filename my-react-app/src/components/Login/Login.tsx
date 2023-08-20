@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Input from "../../common/Input/Input";
 import Button from "../../common/Button/Button";
-import { COURSES, REGISTRATION, TOKEN } from "../../constants/Pages";
+import { COURSES, REGISTRATION, TOKEN, USER_NAME } from "../../constants/Pages";
 
 import "./Login.css";
 
@@ -36,7 +36,7 @@ const Login: React.FC = () => {
 
       const data = await response.json();
       localStorage.setItem(TOKEN, data.result);
-      localStorage.setItem("userName", data.user.name);
+      localStorage.setItem(USER_NAME, data.user.name);
       navigate(COURSES, { replace: true });
     } catch (error) {
       console.error("Login error:", error);

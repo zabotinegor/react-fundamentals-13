@@ -2,18 +2,18 @@ import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import logo from "./components/Logo/logo.png";
 import Button from "../../common/Button/Button";
-import { LOGIN, REGISTRATION, TOKEN } from "../../constants/Pages";
+import { LOGIN, REGISTRATION, TOKEN, USER_NAME } from "../../constants/Pages";
 
 import "./Header.css";
 
 const Header: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const userName = localStorage.getItem("userName");
+  const userName = localStorage.getItem(USER_NAME);
 
   const handleLogout = () => {
     localStorage.removeItem(TOKEN);
-    localStorage.removeItem("userName");
+    localStorage.removeItem(USER_NAME);
     navigate(LOGIN);
   };
 
