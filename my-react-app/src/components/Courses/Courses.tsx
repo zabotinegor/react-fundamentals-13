@@ -5,6 +5,7 @@ import EmptyCourseList from "../EmptyCourseList/EmptyCourseList";
 import SearchBar from "./components/SearchBar/SearchBar";
 import { useNavigate } from "react-router-dom";
 import Button from "../../common/Button/Button";
+import { COURSEADD, COURSES } from "../../constants/Pages";
 
 import "./Courses.css";
 
@@ -60,11 +61,11 @@ const Courses: React.FC = () => {
 
   const handleBackToCourses = () => {
     setSearchTerm("");
-    navigate("/courses", { replace: true });
+    navigate(COURSES, { replace: true });
   };
 
   const handleAddCourse = () => {
-    navigate("/courses/add", { replace: true });
+    navigate(COURSEADD, { replace: true });
   };
 
   return (
@@ -89,7 +90,7 @@ const Courses: React.FC = () => {
               key={course.id}
               {...course}
               onShowCourseInfo={() =>
-                navigate(`/courses/${course.id}`, { replace: true })
+                navigate(`${COURSES}/${course.id}`, { replace: true })
               }
             />
           ))}

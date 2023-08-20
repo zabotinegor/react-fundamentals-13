@@ -4,6 +4,7 @@ import Button from "../../common/Button/Button";
 import { generateGUID } from "../../helpers/generateGUID";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { COURSES, TOKEN } from "../../constants/Pages";
 
 import "./CreateCourse.css";
 
@@ -117,7 +118,7 @@ const CreateCourse: React.FC = () => {
       authors: authors.map((author) => author.id),
     };
 
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem(TOKEN);
     if (!token) {
       console.error("Authorization token not found");
       return;
@@ -138,7 +139,7 @@ const CreateCourse: React.FC = () => {
 
     await createCourse(courseData, token);
 
-    navigate("/courses", { replace: true });
+    navigate(COURSES, { replace: true });
   };
 
   const handleAddAuthor = (e: React.MouseEvent) => {

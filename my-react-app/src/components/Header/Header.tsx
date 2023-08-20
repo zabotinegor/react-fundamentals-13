@@ -2,6 +2,7 @@ import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import logo from "./components/Logo/logo.png";
 import Button from "../../common/Button/Button";
+import { LOGIN, REGISTRATION, TOKEN } from "../../constants/Pages";
 
 import "./Header.css";
 
@@ -11,13 +12,13 @@ const Header: React.FC = () => {
   const userName = localStorage.getItem("userName");
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
+    localStorage.removeItem(TOKEN);
     localStorage.removeItem("userName");
-    navigate("/login");
+    navigate(LOGIN);
   };
 
   const renderHeaderContent = () => {
-    if (location.pathname !== "/login" && location.pathname !== "/register") {
+    if (location.pathname !== LOGIN && location.pathname !== REGISTRATION) {
       return (
         <>
           <div className="logo">

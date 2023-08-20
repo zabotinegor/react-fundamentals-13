@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Input from "../../common/Input/Input";
 import Button from "../../common/Button/Button";
+import { COURSES, REGISTRATION, TOKEN } from "../../constants/Pages";
 
 import "./Login.css";
 
@@ -34,9 +35,9 @@ const Login: React.FC = () => {
       }
 
       const data = await response.json();
-      localStorage.setItem("token", data.result);
+      localStorage.setItem(TOKEN, data.result);
       localStorage.setItem("userName", data.user.name);
-      navigate("/courses", { replace: true });
+      navigate(COURSES, { replace: true });
     } catch (error) {
       console.error("Login error:", error);
       setErrors({ email: "Invalid email or password" });
@@ -63,7 +64,7 @@ const Login: React.FC = () => {
         <Button text="Login" />
       </form>
       <p>
-        Don't have an account? <Link to="/register">Sign up</Link>
+        Don't have an account? <Link to={REGISTRATION}>Sign up</Link>
       </p>
     </div>
   );

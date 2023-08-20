@@ -1,11 +1,12 @@
 import { useNavigate } from "react-router-dom";
 import Button from "../../common/Button/Button";
+import { COURSEADD } from "../../constants/Pages";
 
 const EmptyCourseList = () => {
   const navigate = useNavigate();
 
   const handleAddCourse = () => {
-    navigate("/courses/add", { replace: true });
+    navigate(COURSEADD, { replace: true });
   };
 
   return (

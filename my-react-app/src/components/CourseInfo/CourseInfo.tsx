@@ -6,6 +6,7 @@ import { getAuthorsList } from "../../helpers/getAuthorsList";
 import { mockedAuthorsList } from "../../mocks/Authors";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { COURSES } from "../../constants/Pages";
 
 import "./CourseInfo.css";
 
@@ -35,7 +36,7 @@ const CourseInfo: React.FC = () => {
   }, [courseId]);
 
   const handleBackToCourses = () => {
-    navigate("/courses");
+    navigate(COURSES);
   };
 
   return (

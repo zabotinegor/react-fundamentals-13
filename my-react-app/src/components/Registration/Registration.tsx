@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Input from "../../common/Input/Input";
 import Button from "../../common/Button/Button";
+import { LOGIN } from "../../constants/Pages";
 
 import "./Registration.css";
 
@@ -34,7 +35,7 @@ const Registration: React.FC = () => {
         throw new Error("Login failed");
       }
 
-      navigate("/login", { replace: true });
+      navigate(LOGIN, { replace: true });
     } catch (error) {
       console.error("Register error:", error);
       setErrors({ email: "Invalid email or password" });
@@ -61,7 +62,7 @@ const Registration: React.FC = () => {
         {errors.email && <p className="error">{errors.email}</p>}
         <Button text="Register" />
         <p>
-          Already have an account? <Link to="/login">Login</Link>
+          Already have an account? <Link to={LOGIN}>Login</Link>
         </p>
       </form>
     </div>
