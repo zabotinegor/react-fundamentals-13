@@ -2,11 +2,13 @@ import React, { useState, useEffect } from "react";
 import Button from "../../common/Button/Button";
 import { formatDuration } from "../../helpers/getCourseDuration";
 import { formatDate } from "../../helpers/formatDate";
-import { getAuthorsList } from "../../helpers/getAuthorsList";
-import { mockedAuthorsList } from "../../mocks/Authors";
 import { useParams, useNavigate } from "react-router-dom";
 import { COURSES } from "../../constants/Pages";
-import { CourseData, getCourseDataAPI } from "../../helpers/requests";
+import {
+  CourseData,
+  getAuthorAPI,
+  getCourseDataAPI,
+} from "../../helpers/requests";
 
 import "./CourseInfo.css";
 
@@ -18,8 +20,26 @@ const CourseInfo: React.FC = () => {
   useEffect(() => {
     getCourseDataAPI(
       courseId,
-      (result) => {
-        setCourse(result);
+      async (result) => {
+        const authorPromises = result.authors.map(async (authorId) => {
+          try {
+            const authorData = await getAuthorAPI(authorId);
+            return authorData?.name;
+          } catch (error) {
+            console.error("Error fetching author data:", error);
+            return null;
+          }
+        });
+
+        const authorsData = await Promise.all(authorPromises);
+
+        const updatedCourse: CourseData = {
+          ...result,
+          authors: authorsData.filter(
+            (authorName) => authorName !== null
+          ) as string[],
+        };
+        setCourse(updatedCourse);
       },
       (error) => {
         console.error("Error fetching course data:", error);
@@ -43,7 +63,7 @@ const CourseInfo: React.FC = () => {
             <div className="course-details-content">
               <p>ID: {course.id}</p>
               <p className="authors-list">
-                {getAuthorsList(course.authors, mockedAuthorsList)}
+                {course.authors.map((author) => author).join(", ")}
               </p>
               <p>Duration: {formatDuration(course.duration)}</p>
               <p>Creation Date: {formatDate(course.creationDate)}</p>

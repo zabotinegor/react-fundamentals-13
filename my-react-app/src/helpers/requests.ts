@@ -1,6 +1,7 @@
 import axios from "axios";
 import {
   AUTHORS_ADD_API_URL,
+  AUTHORS_API_URL,
   COURSES_ADD_API_URL,
   COURSES_ALL_API_URL,
   COURSES_API_URL,
@@ -20,14 +21,14 @@ export interface CourseData {
 
 export function getCourseDataAPI(
   courseId: string | undefined,
-  SuccessGetCourseCallback?: (result: CourseData) => void,
+  successCallBack?: (result: CourseData) => void,
   errorCallback?: (error: unknown) => void
 ) {
   axios
     .get(`${COURSES_API_URL}/${courseId}`)
     .then((response) => {
-      if (SuccessGetCourseCallback) {
-        SuccessGetCourseCallback(response.data.result);
+      if (successCallBack) {
+        successCallBack(response.data.result);
       }
     })
     .catch((error) => {
@@ -152,11 +153,8 @@ export async function loginUserAPI(
     });
 
     if (response.status === 201) {
-      const data = response.data;
-      //   localStorage.setItem(TOKEN, data.result);
-      //   localStorage.setItem(USER_NAME, data.user.name);
       if (successCallback) {
-        successCallback(data);
+        successCallback(response.data);
       }
     } else {
       errorCallback("Login failed");
@@ -193,5 +191,26 @@ export async function registerUserAPI(
     if (errorCallback) {
       errorCallback(error);
     }
+  }
+}
+
+export interface Author {
+  id: string;
+  name: string;
+}
+
+export async function getAuthorAPI(authorId: string): Promise<Author | null> {
+  try {
+    const response = await axios.get(`${AUTHORS_API_URL}/${authorId}`);
+
+    if (response.status === 200 && response.data.successful) {
+      const authorData = response.data.result;
+      return authorData;
+    } else {
+      return null;
+    }
+  } catch (error) {
+    console.error("An error occurred while fetching author data:", error);
+    return null;
   }
 }
