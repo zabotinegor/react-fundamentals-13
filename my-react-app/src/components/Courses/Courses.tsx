@@ -1,22 +1,17 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import Course from "./components/CourseCard/CourseCard";
 import EmptyCourseList from "../EmptyCourseList/EmptyCourseList";
 import SearchBar from "./components/SearchBar/SearchBar";
 import { useNavigate } from "react-router-dom";
 import Button from "../../common/Button/Button";
 import { COURSEADD, COURSES } from "../../constants/Pages";
+import {
+  CourseData,
+  getAllCoursesAPI,
+  getFilteredCoursesAPI,
+} from "../../helpers/requests";
 
 import "./Courses.css";
-
-interface CourseData {
-  id: string;
-  title: string;
-  duration: number;
-  creationDate: string;
-  description: string;
-  authors: string[];
-}
 
 const Courses: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
@@ -38,25 +33,26 @@ const Courses: React.FC = () => {
   };
 
   const getCourses = () => {
-    axios
-      .get("http://localhost:4000/courses/all")
-      .then((response) => {
-        setCourses(response.data.result);
-      })
-      .catch((error) => {
+    getAllCoursesAPI(
+      (result) => {
+        setCourses(result);
+      },
+      (error) => {
         console.error("Error fetching course data:", error);
-      });
+      }
+    );
   };
 
   const getFilteredCourses = () => {
-    axios
-      .get(`http://localhost:4000/courses/filter?title=${searchTerm}`)
-      .then((response) => {
-        setCourses(response.data.result);
-      })
-      .catch((error) => {
+    getFilteredCoursesAPI(
+      searchTerm,
+      (result) => {
+        setCourses(result);
+      },
+      (error) => {
         console.error("Error fetching filtered course data:", error);
-      });
+      }
+    );
   };
 
   const handleBackToCourses = () => {

@@ -5,6 +5,7 @@ import Button from "../../common/Button/Button";
 import { LOGIN } from "../../constants/Pages";
 
 import "./Registration.css";
+import { registerUserAPI } from "../../helpers/requests";
 
 const Registration: React.FC = () => {
   const [name, setName] = useState("");
@@ -22,24 +23,18 @@ const Registration: React.FC = () => {
       return;
     }
 
-    try {
-      const response = await fetch("http://localhost:4000/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ name, email, password }),
-      });
-
-      if (!response.ok) {
-        throw new Error("Login failed");
+    registerUserAPI(
+      name,
+      email,
+      password,
+      () => {
+        navigate(LOGIN, { replace: true });
+      },
+      (error) => {
+        console.error("Register error:", error);
+        setErrors({ email: "Invalid email or password" });
       }
-
-      navigate(LOGIN, { replace: true });
-    } catch (error) {
-      console.error("Register error:", error);
-      setErrors({ email: "Invalid email or password" });
-    }
+    );
   };
 
   return (

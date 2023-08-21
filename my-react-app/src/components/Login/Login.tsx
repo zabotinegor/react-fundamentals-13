@@ -5,6 +5,7 @@ import Button from "../../common/Button/Button";
 import { COURSES, REGISTRATION, TOKEN, USER_NAME } from "../../constants/Pages";
 
 import "./Login.css";
+import { loginUserAPI } from "../../helpers/requests";
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState<string>("");
@@ -21,27 +22,19 @@ const Login: React.FC = () => {
       return;
     }
 
-    try {
-      const response = await fetch("http://localhost:4000/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
-      });
-
-      if (!response.ok) {
-        throw new Error("Login failed");
+    loginUserAPI(
+      email,
+      password,
+      (data) => {
+        localStorage.setItem(TOKEN, data.result);
+        localStorage.setItem(USER_NAME, data.user.name);
+        navigate(COURSES, { replace: true });
+      },
+      (error) => {
+        console.error("Login error:", error);
+        setErrors({ email: "Invalid email or password" });
       }
-
-      const data = await response.json();
-      localStorage.setItem(TOKEN, data.result);
-      localStorage.setItem(USER_NAME, data.user.name);
-      navigate(COURSES, { replace: true });
-    } catch (error) {
-      console.error("Login error:", error);
-      setErrors({ email: "Invalid email or password" });
-    }
+    );
   };
 
   return (

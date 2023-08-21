@@ -5,19 +5,10 @@ import { formatDate } from "../../helpers/formatDate";
 import { getAuthorsList } from "../../helpers/getAuthorsList";
 import { mockedAuthorsList } from "../../mocks/Authors";
 import { useParams, useNavigate } from "react-router-dom";
-import axios from "axios";
 import { COURSES } from "../../constants/Pages";
+import { CourseData, getCourseDataAPI } from "../../helpers/requests";
 
 import "./CourseInfo.css";
-
-interface CourseData {
-  id: string;
-  title: string;
-  description: string;
-  duration: number;
-  authors: string[];
-  creationDate: string;
-}
 
 const CourseInfo: React.FC = () => {
   const { courseId } = useParams<{ courseId: string }>();
@@ -25,14 +16,15 @@ const CourseInfo: React.FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    axios
-      .get(`http://localhost:4000/courses/${courseId}`)
-      .then((response) => {
-        setCourse(response.data.result);
-      })
-      .catch((error) => {
+    getCourseDataAPI(
+      courseId,
+      (result) => {
+        setCourse(result);
+      },
+      (error) => {
         console.error("Error fetching course data:", error);
-      });
+      }
+    );
   }, [courseId]);
 
   const handleBackToCourses = () => {

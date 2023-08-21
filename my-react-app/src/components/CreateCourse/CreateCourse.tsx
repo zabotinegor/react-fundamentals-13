@@ -2,18 +2,15 @@ import React, { useState } from "react";
 import Input from "../../common/Input/Input";
 import Button from "../../common/Button/Button";
 import { generateGUID } from "../../helpers/generateGUID";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { COURSES, TOKEN } from "../../constants/Pages";
+import {
+  Course,
+  createAuthorAPI,
+  createCourseAPI,
+} from "../../helpers/requests";
 
 import "./CreateCourse.css";
-
-interface Course {
-  title: string;
-  description: string;
-  duration: number;
-  authors: string[];
-}
 
 interface Author {
   id: string;
@@ -30,51 +27,16 @@ const CreateCourse: React.FC = () => {
   const navigate = useNavigate();
 
   const createCourse = async (courseData: Course, token: string) => {
-    try {
-      const response = await axios.post(
-        "http://localhost:4000/courses/add",
-        courseData,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: token,
-          },
-        }
-      );
-
-      if (response.status === 201) {
+    createCourseAPI(
+      courseData,
+      token,
+      () => {
         console.log("Course created successfully");
-      } else {
-        console.error("Failed to create course");
+      },
+      (error) => {
+        console.error("An error occurred:", error);
       }
-    } catch (error) {
-      console.error("An error occurred:", error);
-    }
-  };
-
-  const createAuthor = async (authorName: string, token: string) => {
-    try {
-      const response = await axios.post(
-        "http://localhost:4000/authors/add",
-        { name: authorName },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: token,
-          },
-        }
-      );
-
-      if (response.data.successful) {
-        return response.data.result.id;
-      } else {
-        console.error("Failed to create author");
-        return null;
-      }
-    } catch (error) {
-      console.error("An error occurred:", error);
-      return null;
-    }
+    );
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -127,13 +89,19 @@ const CreateCourse: React.FC = () => {
 
     const authorIds: string[] = [];
     for (const author of authors) {
-      const authorId = await createAuthor(author.name, token);
-      if (authorId) {
-        authorIds.push(authorId);
-      } else {
-        console.error("Author creation failed");
-        return;
-      }
+      await createAuthorAPI(
+        author.name,
+        token,
+        (authorId) => {
+          authorIds.push(authorId);
+        },
+        (error) => {
+          console.error(
+            `Author with name ${author.name} creation failed:`,
+            error
+          );
+        }
+      );
     }
 
     courseData.authors = authorIds;
