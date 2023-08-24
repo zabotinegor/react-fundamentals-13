@@ -1,47 +1,79 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Button from "../../common/Button/Button";
 import { formatDuration } from "../../helpers/getCourseDuration";
 import { formatDate } from "../../helpers/formatDate";
+import { useParams, useNavigate } from "react-router-dom";
+import { COURSES } from "../../constants/Pages";
+import {
+  CourseData,
+  getAuthorAPI,
+  getCourseDataAPI,
+} from "../../helpers/requests";
+
 import "./CourseInfo.css";
-import { getAuthorsList } from "../../helpers/getAuthorsList";
-import { mockedAuthorsList } from "../../mocks/Authors";
 
-interface CourseInfoProps {
-  id: string;
-  title: string;
-  description: string;
-  duration: number;
-  authors: string[];
-  creationDate: string;
-  onBackToCourses: () => void;
-}
+const CourseInfo: React.FC = () => {
+  const { courseId } = useParams<{ courseId: string }>();
+  const [course, setCourse] = useState<CourseData | null>(null);
+  const navigate = useNavigate();
 
-const CourseInfo: React.FC<CourseInfoProps> = ({
-  id,
-  title,
-  description,
-  duration,
-  authors,
-  creationDate,
-  onBackToCourses,
-}) => {
+  useEffect(() => {
+    getCourseDataAPI(
+      courseId,
+      async (result) => {
+        const authorPromises = result.authors.map(async (authorId) => {
+          try {
+            const authorData = await getAuthorAPI(authorId);
+            return authorData?.name;
+          } catch (error) {
+            console.error("Error fetching author data:", error);
+            return null;
+          }
+        });
+
+        const authorsData = await Promise.all(authorPromises);
+
+        const updatedCourse: CourseData = {
+          ...result,
+          authors: authorsData.filter(
+            (authorName) => authorName !== null
+          ) as string[],
+        };
+        setCourse(updatedCourse);
+      },
+      (error) => {
+        console.error("Error fetching course data:", error);
+      }
+    );
+  }, [courseId]);
+
+  const handleBackToCourses = () => {
+    navigate(COURSES);
+  };
+
   return (
     <div className="course">
-      <h2 className="course-title">{title}</h2>
-      <div className="course-details">
-        <div className="course-description">
-          <p>{description}</p>
-        </div>
-        <div className="course-details-content">
-          <p>ID: {id}</p>
-          <p className="authors-list">
-            {getAuthorsList(authors, mockedAuthorsList)}
-          </p>
-          <p>Duration: {formatDuration(duration)}</p>
-          <p>Creation Date: {formatDate(creationDate)}</p>
-          <Button text="Back to Courses" onClick={onBackToCourses} />
-        </div>
-      </div>
+      {course ? (
+        <>
+          <h2 className="course-title">{course.title}</h2>
+          <div className="course-details">
+            <div className="course-description">
+              <p>{course.description}</p>
+            </div>
+            <div className="course-details-content">
+              <p>ID: {course.id}</p>
+              <p className="authors-list">
+                {course.authors.map((author) => author).join(", ")}
+              </p>
+              <p>Duration: {formatDuration(course.duration)}</p>
+              <p>Creation Date: {formatDate(course.creationDate)}</p>
+              <Button text="Back to Courses" onClick={handleBackToCourses} />
+            </div>
+          </div>
+        </>
+      ) : (
+        <p>Course was not found.</p>
+      )}
     </div>
   );
 };

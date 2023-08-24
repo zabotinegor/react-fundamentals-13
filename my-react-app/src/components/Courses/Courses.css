@@ -33,4 +33,13 @@
 
 .search-bar-container {
   margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.add-course-button-container {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
 }
