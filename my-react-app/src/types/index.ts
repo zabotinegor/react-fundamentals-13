@@ -8,6 +8,8 @@ export interface Response<T> {
   data?: T;
 }
 
+// Courses types
+
 export interface Course {
   id: string;
   title: string;
@@ -30,6 +32,25 @@ export interface GetCoursesResponse {
   result: Course[] | null;
 }
 
+// Authors types
+
+export interface Author {
+  id: string;
+  name: string;
+}
+
+export interface AuthorsState {
+  authors: Author[];
+  isLoading: boolean;
+}
+
+export interface GetAuthorsResponse {
+  result: Author[] | null;
+}
+
+// Common state
+
 export interface State {
   courses: CoursesState;
+  authors: AuthorsState;
 }

@@ -1,6 +1,7 @@
 import { all } from "typed-redux-saga";
 import { getCoursesSaga } from "./courses/sagas";
+import { getAuthorsSaga } from "./authors/sagas";
 
 export default function* rootSaga() {
-  yield all([getCoursesSaga()]);
+  yield all([getCoursesSaga(), getAuthorsSaga()]);
 }

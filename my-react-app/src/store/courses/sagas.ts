@@ -16,6 +16,7 @@ export function* getCourses(action: Action<GetCoursesRequest>) {
       getCoursesAPI,
       action.payload
     );
+
     if (response.status === 200) {
       yield put(actions.setCourses(response));
       yield put(actions.setCoursesIsLoading(false));

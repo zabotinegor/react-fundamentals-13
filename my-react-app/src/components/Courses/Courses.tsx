@@ -7,7 +7,8 @@ import SearchBar from "./components/SearchBar/SearchBar";
 import { useNavigate } from "react-router-dom";
 import Button from "../../common/Button/Button";
 import { COURSEADD, COURSES } from "../../constants/Pages";
-import { actions } from "../../store/courses/reducer";
+import { actions as courseActions } from "../../store/courses/reducer";
+import { actions as authorsActions } from "../../store/authors/reducer";
 import { useDispatch, useSelector } from "react-redux";
 import {
   selectCourses,
@@ -25,11 +26,12 @@ const Courses: React.FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    dispatch(actions.getCourses(coursesRequest));
+    dispatch(courseActions.getCourses(coursesRequest));
+    dispatch(authorsActions.getAuthors());
   }, []);
 
   const handleSearchBar = () => {
-    dispatch(actions.getCourses(coursesRequest));
+    dispatch(courseActions.getCourses(coursesRequest));
   };
 
   const handleBackToCourses = () => {
