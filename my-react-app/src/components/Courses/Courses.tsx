@@ -9,12 +9,16 @@ import Button from "../../common/Button/Button";
 import { COURSEADD, COURSES } from "../../constants/Pages";
 import { actions } from "../../store/courses/reducer";
 import { useDispatch, useSelector } from "react-redux";
-import { selectCourses } from "../../store/courses/selectors";
+import {
+  selectCourses,
+  selectIsCoursesLoading,
+} from "../../store/courses/selectors";
 import { GetCoursesRequest } from "../../types";
 
 const Courses: React.FC = () => {
   const dispatch = useDispatch();
   const courses = useSelector(selectCourses);
+  const coursesLoading = useSelector(selectIsCoursesLoading);
   const [coursesRequest, setCoursesRequest] = useState<GetCoursesRequest>({
     searchTerm: "",
   });
@@ -49,25 +53,31 @@ const Courses: React.FC = () => {
         onSearch={handleSearchBar}
         onReset={handleBackToCourses}
       />
-      {courses.length !== 0 && (
-        <div className="add-course-button-container">
-          <Button text="Add New Course" onClick={handleAddCourse} />
-        </div>
-      )}
-      {courses.length === 0 ? (
-        <EmptyCourseList />
+      {coursesLoading ? (
+        <div className="loading-icon">Loading...</div> // Display loading icon or message
       ) : (
-        <div className="courses-list">
-          {courses.map((course) => (
-            <Course
-              key={course.id}
-              {...course}
-              onShowCourseInfo={() =>
-                navigate(`${COURSES}/${course.id}`, { replace: true })
-              }
-            />
-          ))}
-        </div>
+        <>
+          {courses.length !== 0 && (
+            <div className="add-course-button-container">
+              <Button text="Add New Course" onClick={handleAddCourse} />
+            </div>
+          )}
+          {courses.length === 0 ? (
+            <EmptyCourseList />
+          ) : (
+            <div className="courses-list">
+              {courses.map((course) => (
+                <Course
+                  key={course.id}
+                  {...course}
+                  onShowCourseInfo={() =>
+                    navigate(`${COURSES}/${course.id}`, { replace: true })
+                  }
+                />
+              ))}
+            </div>
+          )}
+        </>
       )}
     </div>
   );
