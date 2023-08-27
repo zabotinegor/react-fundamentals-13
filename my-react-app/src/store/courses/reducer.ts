@@ -14,7 +14,7 @@ export const initialState: CoursesState = {
 
 export const CoursesReducer = createSlice({
   name: "courses",
-  initialState: () => initialState,
+  initialState: initialState,
   reducers: {
     setCourses: (
       state: CoursesState,

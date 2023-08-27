@@ -27,7 +27,7 @@ function App() {
 
   useEffect(() => {
     const token = localStorage.getItem(TOKEN);
-    if (!token && location.pathname !== REGISTRATION) {
+    if ((!token || token === "") && location.pathname !== REGISTRATION) {
       navigate(LOGIN, { replace: true });
     }
   }, [navigate]);

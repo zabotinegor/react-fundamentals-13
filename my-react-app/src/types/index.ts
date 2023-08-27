@@ -48,9 +48,36 @@ export interface GetAuthorsResponse {
   result: Author[] | null;
 }
 
+// User types
+
+export interface User {
+  name: string;
+  email: string;
+}
+
+export interface UserState extends User {
+  isAuth: boolean;
+  token: string;
+}
+
+export interface LoginRequest {
+  loginData: {
+    email: string;
+    password: string;
+  };
+  handleSuccess: (token: string) => void;
+  handleAPIError: (code: number) => void | null;
+  handleError: (error: unknown) => void | null;
+}
+
+export interface LoginResponse {
+  result: string;
+  user: User;
+}
 // Common state
 
 export interface State {
+  user: UserState;
   courses: CoursesState;
   authors: AuthorsState;
 }
