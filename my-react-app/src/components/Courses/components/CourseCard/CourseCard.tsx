@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from "react";
+import "./CourseCard.css";
+
 import Button from "../../../../common/Button/Button";
 import { formatDuration } from "../../../../helpers/getCourseDuration";
 import { formatDate } from "../../../../helpers/formatDate";
-import { getAuthorAPI, Author } from "../../../../helpers/requests"; // Import the getAuthorAPI function
-
-import "./CourseCard.css";
+import { getAuthorsList } from "../../../../helpers/getAuthorsList";
+import { useSelector } from "react-redux";
+import { selectAuthors } from "../../../../store/authors/selectors";
 
 interface CourseProps {
   title: string;
@@ -23,26 +24,7 @@ const Course: React.FC<CourseProps> = ({
   authors,
   onShowCourseInfo,
 }) => {
-  const [authorsData, setAuthorsData] = useState<(Author | null)[]>();
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const authorPromises = authors.map(async (authorId) => {
-        try {
-          const authorData = await getAuthorAPI(authorId);
-          return authorData;
-        } catch (error) {
-          console.error("Error fetching author data:", error);
-          return null;
-        }
-      });
-
-      const fetchedAuthorsData = await Promise.all(authorPromises);
-      setAuthorsData(fetchedAuthorsData.filter((data) => data !== null));
-    };
-
-    fetchData();
-  }, [authors]);
+  const authorsList = useSelector(selectAuthors);
 
   return (
     <div className="course">
@@ -52,11 +34,7 @@ const Course: React.FC<CourseProps> = ({
           <p>{description}</p>
         </div>
         <div className="course-details-content">
-          <p className="authors-list">
-            {authorsData
-              ? authorsData.map((author) => author?.name).join(", ")
-              : ""}
-          </p>
+          <p className="authors-list">{getAuthorsList(authors, authorsList)}</p>
           <p>Duration: {formatDuration(duration)}</p>
           <p>Creation Date: {formatDate(creationDate)}</p>
           <Button text="Show Course" onClick={onShowCourseInfo} />

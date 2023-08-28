@@ -24,6 +24,19 @@ export interface CoursesState {
   isLoading: boolean;
 }
 
+export interface GetCourseRequest {
+  courseId: string | undefined;
+}
+
+export interface GetCourseResponse {
+  result: Course | undefined;
+}
+
+export interface CourseState {
+  currentCourse: Course | undefined;
+  isLoading: boolean;
+}
+
 export interface GetCoursesRequest {
   searchTerm: string | null;
 }
