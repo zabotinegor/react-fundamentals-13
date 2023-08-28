@@ -69,3 +69,38 @@
 .create-course-field .create-add-author-button:hover {
   background-color: #0056b3;
 }
+
+.create-course-buttons {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.create-course-create-button,
+.create-course-back-button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.create-course-create-button {
+  background-color: #007bff;
+  color: white;
+}
+
+.create-course-create-button:hover {
+  background-color: #0056b3;
+}
+
+.create-course-back-button {
+  background-color: #ccc;
+  color: #fff;
+}
+
+.create-course-back-button:hover {
+  background-color: #aaa;
+}

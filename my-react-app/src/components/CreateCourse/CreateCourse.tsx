@@ -1,3 +1,5 @@
+import "./CreateCourse.css";
+
 import React, { useState } from "react";
 import Input from "../../common/Input/Input";
 import Button from "../../common/Button/Button";
@@ -9,8 +11,6 @@ import {
   createAuthorAPI,
   createCourseAPI,
 } from "../../helpers/requests";
-
-import "./CreateCourse.css";
 
 interface Author {
   id: string;
@@ -200,7 +200,17 @@ const CreateCourse: React.FC = () => {
             </p>
           ))}
         </div>
-        <Button text="Create Course" />
+        <div className="create-course-buttons">
+          <Button
+            text="Create Course"
+            className="create-course-create-button"
+          />
+          <Button
+            text="Back to Courses"
+            className="create-course-back-button"
+            onClick={() => navigate(COURSES, { replace: true })}
+          />
+        </div>
       </form>
     </div>
   );
