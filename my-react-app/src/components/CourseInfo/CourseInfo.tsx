@@ -1,51 +1,33 @@
-import React, { useState, useEffect } from "react";
+import "./CourseInfo.css";
+
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import Button from "../../common/Button/Button";
 import { formatDuration } from "../../helpers/getCourseDuration";
 import { formatDate } from "../../helpers/formatDate";
 import { useParams, useNavigate } from "react-router-dom";
 import { COURSES } from "../../constants/Pages";
+import { actions as courseActions } from "../../store/course/reducer";
+import { actions as authorsActions } from "../../store/authors/reducer";
+import { selectAuthors } from "../../store/authors/selectors";
+import { getAuthorsList } from "../../helpers/getAuthorsList";
 import {
-  CourseData,
-  getAuthorAPI,
-  getCourseDataAPI,
-} from "../../helpers/requests";
-
-import "./CourseInfo.css";
+  selectCurrentCourse,
+  selectIsCurrentCourseLoading,
+} from "../../store/course/selectors";
 
 const CourseInfo: React.FC = () => {
+  const dispatch = useDispatch();
   const { courseId } = useParams<{ courseId: string }>();
-  const [course, setCourse] = useState<CourseData | null>(null);
+  const course = useSelector(selectCurrentCourse);
+  const authorsList = useSelector(selectAuthors);
+  const isCourseLoading = useSelector(selectIsCurrentCourseLoading);
   const navigate = useNavigate();
 
   useEffect(() => {
-    getCourseDataAPI(
-      courseId,
-      async (result) => {
-        const authorPromises = result.authors.map(async (authorId) => {
-          try {
-            const authorData = await getAuthorAPI(authorId);
-            return authorData?.name;
-          } catch (error) {
-            console.error("Error fetching author data:", error);
-            return null;
-          }
-        });
-
-        const authorsData = await Promise.all(authorPromises);
-
-        const updatedCourse: CourseData = {
-          ...result,
-          authors: authorsData.filter(
-            (authorName) => authorName !== null
-          ) as string[],
-        };
-        setCourse(updatedCourse);
-      },
-      (error) => {
-        console.error("Error fetching course data:", error);
-      }
-    );
-  }, [courseId]);
+    dispatch(authorsActions.getAuthors());
+    dispatch(courseActions.getCurrentCourse({ courseId: courseId }));
+  }, []);
 
   const handleBackToCourses = () => {
     navigate(COURSES);
@@ -63,7 +45,7 @@ const CourseInfo: React.FC = () => {
             <div className="course-details-content">
               <p>ID: {course.id}</p>
               <p className="authors-list">
-                {course.authors.map((author) => author).join(", ")}
+                {getAuthorsList(course.authors, authorsList)}
               </p>
               <p>Duration: {formatDuration(course.duration)}</p>
               <p>Creation Date: {formatDate(course.creationDate)}</p>

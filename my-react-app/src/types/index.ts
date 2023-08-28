@@ -116,5 +116,5 @@ export interface State {
   user: UserState;
   courses: CoursesState;
   authors: AuthorsState;
-  currentCourse: CourseState;
+  course: CourseState;
 }
