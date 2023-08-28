@@ -40,20 +40,39 @@
 }
 
 .create-course-authors {
+  display: flex;
+  justify-content: space-between; /* Align lists to the left and right */
+  align-items: flex-start; /* Align lists to the top */
   margin-bottom: 15px;
 }
 
-.create-course-author-name {
+.new-author-list,
+.available-author-list {
+  flex: 1; /* Distribute available space equally between the lists */
+}
+
+.available-author-list ul {
+  max-height: 200px; /* Set a max height for scrollable area */
+  padding: 10px;
+  overflow-y: auto; /* Add a vertical scrollbar when content overflows */
+}
+
+.list-title {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.author-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* Align items within author-item */
+  width: 100%; /* Equal width distribution */
+  margin-bottom: 5px;
+}
+
+.author-name {
   font-weight: bold;
-}
-
-.create-course-errors {
-  margin-bottom: 15px;
-  color: red;
-}
-
-.create-course-error {
-  margin: 5px 0;
+  margin-right: 5px;
 }
 
 .create-course-field .create-add-author-button {
@@ -70,26 +89,28 @@
   background-color: #0056b3;
 }
 
-.create-course-buttons {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 20px;
+.error-list {
+  margin-bottom: 15px;
+  color: red;
 }
 
-.create-course-create-button,
-.create-course-back-button {
-  padding: 10px 20px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-weight: bold;
-  text-transform: uppercase;
+.error-item {
+  margin: 5px 0;
+}
+
+.button-list {
+  display: flex;
+  justify-content: space-between;
 }
 
 .create-course-create-button {
   background-color: #007bff;
-  color: white;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  margin-right: 10px;
+  cursor: pointer;
+  border-radius: 4px;
 }
 
 .create-course-create-button:hover {
@@ -98,9 +119,14 @@
 
 .create-course-back-button {
   background-color: #ccc;
-  color: #fff;
+  color: #333;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  border-radius: 4px;
 }
 
 .create-course-back-button:hover {
-  background-color: #aaa;
+  background-color: #b3b3b3;
 }
+

@@ -1,6 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { Action } from "../interfaces";
-import { Response, AuthorsState, GetAuthorsResponse } from "../../types";
+import {
+  Response,
+  AuthorsState,
+  GetAuthorsResponse,
+  CreateAuthorRequest,
+  CreateAuthorResponse,
+} from "../../types";
 
 export const initialState: AuthorsState = {
   authors: [],
@@ -23,6 +29,10 @@ export const AuthorsReducer = createSlice({
 
     setAuthorsIsLoading: (state: AuthorsState, action: Action<boolean>) => {
       state.isLoading = action.payload;
+    },
+
+    addAuthor: (state: AuthorsState, action: Action<CreateAuthorRequest>) => {
+      // Empty body
     },
   },
 });

@@ -1,7 +1,8 @@
+import { CreateAuthorRequest, CreateAuthorResponse } from "./../../types/index";
 import { takeEvery, call, put } from "typed-redux-saga";
 import { actions } from "./reducer";
-import { getAuthorsAPI } from "./requests";
-import { Response, GetAuthorsResponse } from "../../types";
+import { createAuthorAPI, getAuthorsAPI } from "./requests";
+import { Action, Response, GetAuthorsResponse } from "../../types";
 
 export function* getAuthors() {
   try {
@@ -20,6 +21,31 @@ export function* getAuthors() {
   }
 }
 
+export function* addAuthor(action: Action<CreateAuthorRequest>) {
+  try {
+    const response: Response<CreateAuthorResponse> = yield call(
+      createAuthorAPI,
+      action.payload
+    );
+
+    if (response.status === 201) {
+      if (action.payload.handleSuccess) {
+        action.payload.handleSuccess(response.data?.result || null);
+      }
+    } else if (action.payload.handleAPIError) {
+      action.payload.handleAPIError(response.status);
+    }
+  } catch (error) {
+    if (action.payload.handleError) {
+      action.payload.handleError(error);
+    }
+  }
+}
+
 export function* getAuthorsSaga() {
   yield takeEvery(actions.getAuthors, getAuthors);
+}
+
+export function* getAuthorSaga() {
+  yield takeEvery(actions.addAuthor, addAuthor);
 }

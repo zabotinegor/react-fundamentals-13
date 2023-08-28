@@ -1,15 +1,11 @@
 import {
+  AddCourseRequest,
   GetCourseRequest,
   GetCourseResponse,
-  GetCoursesRequest,
 } from "./../../types/index";
 import axios, { AxiosError } from "axios";
-import {
-  COURSES_ALL_API_URL,
-  COURSES_API_URL,
-  COURSES_FILTERED_API_URL,
-} from "../../constants/API";
-import { Response, GetCoursesResponse } from "../../types";
+import { COURSES_ADD_API_URL, COURSES_API_URL } from "../../constants/API";
+import { Response } from "../../types";
 
 export function getCourseAPI(
   getCourseRequest: GetCourseRequest
@@ -30,10 +26,32 @@ export function getCourseAPI(
     });
 }
 
-// export function getCourseAPI(
-//   getCourseRequest: GetCourseRequest
-// ): Promise<Response<GetCourseResponse>> {
-//   const courseId = getCourseRequest.courseId;
+export async function addCourseAPI(
+  addCourseRequest: AddCourseRequest
+): Promise<Response<any>> {
+  try {
+    return await axios.post(
+      COURSES_ADD_API_URL,
+      {
+        title: addCourseRequest.title,
+        description: addCourseRequest.description,
+        duration: addCourseRequest.duration,
+        authors: addCourseRequest.authors,
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: addCourseRequest.token,
+        },
+      }
+    );
+  } catch (error) {
+    const axiosError = error as AxiosError;
 
-//   return axios.get(`${COURSES_API_URL}/${courseId}`);
-// }
+    if (axiosError.response) {
+      return axiosError.response as Response<any>;
+    } else {
+      throw axiosError;
+    }
+  }
+}

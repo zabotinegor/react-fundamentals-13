@@ -45,6 +45,17 @@ export interface GetCoursesResponse {
   result: Course[] | null;
 }
 
+export interface AddCourseRequest {
+  token: string;
+  title: string;
+  description: string;
+  duration: number;
+  authors: string[];
+  handleSuccess: () => void;
+  handleAPIError: (code: number) => void | null;
+  handleError: (error: unknown) => void | null;
+}
+
 // Authors types
 
 export interface Author {
@@ -59,6 +70,18 @@ export interface AuthorsState {
 
 export interface GetAuthorsResponse {
   result: Author[] | null;
+}
+
+export interface CreateAuthorRequest {
+  token: string;
+  name: string;
+  handleSuccess: (author: Author | null) => void;
+  handleAPIError: (code: number) => void | null;
+  handleError: (error: unknown) => void | null;
+}
+
+export interface CreateAuthorResponse {
+  result: Author;
 }
 
 // User types

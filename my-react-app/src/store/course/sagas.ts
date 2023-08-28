@@ -5,8 +5,9 @@ import {
   Response,
   GetCourseRequest,
   GetCourseResponse,
+  AddCourseRequest,
 } from "../../types";
-import { getCourseAPI } from "./requests";
+import { addCourseAPI, getCourseAPI } from "./requests";
 
 export function* getCurrentCourse(action: Action<GetCourseRequest>) {
   try {
@@ -28,6 +29,28 @@ export function* getCurrentCourse(action: Action<GetCourseRequest>) {
   }
 }
 
+export function* addCourse(action: Action<AddCourseRequest>) {
+  try {
+    const response: Response<any> = yield call(addCourseAPI, action.payload);
+
+    if (response.status === 201) {
+      if (action.payload.handleSuccess) {
+        action.payload.handleSuccess();
+      }
+    } else if (action.payload.handleAPIError) {
+      action.payload.handleAPIError(response.status);
+    }
+  } catch (error) {
+    if (action.payload.handleError) {
+      action.payload.handleError(error);
+    }
+  }
+}
+
 export function* getCurrentCourseSaga() {
   yield takeEvery(actions.getCurrentCourse, getCurrentCourse);
+}
+
+export function* addCourseSaga() {
+  yield takeEvery(actions.addCourse, addCourse);
 }

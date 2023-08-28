@@ -5,6 +5,7 @@ import {
   CourseState,
   GetCourseResponse,
   GetCourseRequest,
+  AddCourseRequest,
 } from "../../types";
 
 export const initialState: CourseState = {
@@ -34,6 +35,10 @@ export const CourseReducer = createSlice({
       action: Action<boolean>
     ) => {
       state.isLoading = action.payload;
+    },
+
+    addCourse: (state: any, action: Action<AddCourseRequest>) => {
+      // Empty body
     },
   },
 });
