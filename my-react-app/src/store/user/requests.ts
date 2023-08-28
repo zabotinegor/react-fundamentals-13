@@ -1,7 +1,15 @@
-import { LoginRequest, RegisterRequest } from "./../../types/index";
+import {
+  LoginRequest,
+  LogoutRequest,
+  RegisterRequest,
+} from "./../../types/index";
 import axios, { AxiosError } from "axios";
 import { Response, LoginResponse } from "../../types";
-import { LOGIN_API_URL, REGISTER_API_URL } from "../../constants/API";
+import {
+  LOGIN_API_URL,
+  LOGOUT_API_URL,
+  REGISTER_API_URL,
+} from "../../constants/API";
 
 export async function loginUserAPI(
   loginRequest: LoginRequest
@@ -26,6 +34,23 @@ export async function registerUserAPI(
       name: registerRequest.name,
       email: registerRequest.email,
       password: registerRequest.password,
+    });
+  } catch (error) {
+    const axiosError = error as AxiosError;
+
+    return axiosError.response as Response<any>;
+  }
+}
+
+export async function logoutUserAPI(
+  registerRequest: LogoutRequest
+): Promise<Response<any>> {
+  try {
+    return await axios.delete(LOGOUT_API_URL, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: registerRequest.token,
+      },
     });
   } catch (error) {
     const axiosError = error as AxiosError;

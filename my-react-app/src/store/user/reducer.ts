@@ -3,11 +3,11 @@ import { Action } from "../interfaces";
 import {
   LoginRequest,
   LoginResponse,
+  LogoutRequest,
   RegisterRequest,
   Response,
   UserState,
 } from "../../types";
-import { stat } from "fs";
 
 export const initialState: UserState = {
   isAuth: false,
@@ -33,10 +33,17 @@ export const UserReducer = createSlice({
       // Empty body
     },
 
-    registerResponse: (state: UserState, action: Action<any>) => {
+    registerRequest: (state: UserState, action: Action<RegisterRequest>) => {
       // Empty body
     },
-    registerRequest: (state: UserState, action: Action<RegisterRequest>) => {
+
+    logoutResponse: (state: UserState, action: Action<any>) => {
+      state.isAuth = false;
+      state.name = "";
+      state.email = "";
+      state.token = "";
+    },
+    logoutRequest: (state: UserState, action: Action<LogoutRequest>) => {
       // Empty body
     },
   },

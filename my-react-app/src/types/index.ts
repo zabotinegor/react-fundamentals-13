@@ -82,6 +82,13 @@ export interface RegisterRequest extends User {
   handleError: (error: unknown) => void | null;
 }
 
+export interface LogoutRequest {
+  token: string;
+  handleSuccess: () => void;
+  handleAPIError: (code: number) => void | null;
+  handleError: (error: unknown) => void | null;
+}
+
 // Common state
 
 export interface State {
