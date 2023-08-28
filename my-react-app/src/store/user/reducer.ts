@@ -6,6 +6,7 @@ import {
   LogoutRequest,
   RegisterRequest,
   Response,
+  UserMeResponse,
   UserState,
 } from "../../types";
 
@@ -44,6 +45,17 @@ export const UserReducer = createSlice({
       state.token = "";
     },
     logoutRequest: (state: UserState, action: Action<LogoutRequest>) => {
+      // Empty body
+    },
+
+    userMeResponse: (
+      state: UserState,
+      action: Action<Response<UserMeResponse>>
+    ) => {
+      (state.name = action.payload.data?.result.name || ""),
+        (state.email = action.payload.data?.result.email || "");
+    },
+    userMeRequest: (state: UserState, action: Action<any>) => {
       // Empty body
     },
   },

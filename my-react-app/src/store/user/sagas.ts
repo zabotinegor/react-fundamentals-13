@@ -7,8 +7,15 @@ import {
   LoginResponse,
   RegisterRequest,
   LogoutRequest,
+  UserMeRequest,
+  UserMeResponse,
 } from "../../types";
-import { loginUserAPI, logoutUserAPI, registerUserAPI } from "./requests";
+import {
+  loginUserAPI,
+  logoutUserAPI,
+  registerUserAPI,
+  userMeAPI,
+} from "./requests";
 
 export function* loginUser(action: Action<LoginRequest>) {
   try {
@@ -69,8 +76,26 @@ export function* logoutUser(action: Action<LogoutRequest>) {
   }
 }
 
+export function* userMe(action: Action<UserMeRequest>) {
+  try {
+    const response: Response<UserMeResponse> = yield call(
+      userMeAPI,
+      action.payload
+    );
+
+    if (response.status === 200) {
+      yield put(actions.userMeResponse(response));
+    } else {
+      throw Error();
+    }
+  } catch (error) {
+    // ignore
+  }
+}
+
 export function* userSagas() {
   yield takeEvery(actions.loginRequest, loginUser);
   yield takeEvery(actions.registerRequest, registerUser);
   yield takeEvery(actions.logoutRequest, logoutUser);
+  yield takeEvery(actions.userMeRequest, userMe);
 }

@@ -1,4 +1,4 @@
-import { takeEvery, call, put, takeLatest } from "typed-redux-saga";
+import { takeEvery, call, put } from "typed-redux-saga";
 import { actions } from "./reducer";
 import {
   Action,
@@ -29,5 +29,5 @@ export function* getCurrentCourse(action: Action<GetCourseRequest>) {
 }
 
 export function* getCurrentCourseSaga() {
-  yield takeLatest(actions.getCurrentCourse, getCurrentCourse);
+  yield takeEvery(actions.getCurrentCourse, getCurrentCourse);
 }

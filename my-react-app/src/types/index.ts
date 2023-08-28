@@ -102,10 +102,19 @@ export interface LogoutRequest {
   handleError: (error: unknown) => void | null;
 }
 
+export interface UserMeRequest {
+  token: string;
+}
+
+export interface UserMeResponse {
+  result: User;
+}
+
 // Common state
 
 export interface State {
   user: UserState;
   courses: CoursesState;
   authors: AuthorsState;
+  currentCourse: CourseState;
 }

@@ -2,6 +2,8 @@ import {
   LoginRequest,
   LogoutRequest,
   RegisterRequest,
+  UserMeRequest,
+  UserMeResponse,
 } from "./../../types/index";
 import axios, { AxiosError } from "axios";
 import { Response, LoginResponse } from "../../types";
@@ -9,6 +11,7 @@ import {
   LOGIN_API_URL,
   LOGOUT_API_URL,
   REGISTER_API_URL,
+  USERS_ME_API_URL,
 } from "../../constants/API";
 
 export async function loginUserAPI(
@@ -50,6 +53,23 @@ export async function logoutUserAPI(
       headers: {
         "Content-Type": "application/json",
         Authorization: registerRequest.token,
+      },
+    });
+  } catch (error) {
+    const axiosError = error as AxiosError;
+
+    return axiosError.response as Response<any>;
+  }
+}
+
+export async function userMeAPI(
+  userMeRequest: UserMeRequest
+): Promise<Response<UserMeResponse>> {
+  try {
+    return await axios.get(USERS_ME_API_URL, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: userMeRequest.token,
       },
     });
   } catch (error) {

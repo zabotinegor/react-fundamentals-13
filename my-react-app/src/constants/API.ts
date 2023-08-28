@@ -12,3 +12,5 @@ export const AUTHORS_ADD_API_URL = `${AUTHORS_API_URL}/add`;
 export const LOGIN_API_URL = `${API_BASE_URL}/login`;
 export const REGISTER_API_URL = `${API_BASE_URL}/register`;
 export const LOGOUT_API_URL = `${API_BASE_URL}/logout`;
+
+export const USERS_ME_API_URL = `${API_BASE_URL}/users/me`;
