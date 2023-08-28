@@ -74,6 +74,14 @@ export interface LoginResponse {
   result: string;
   user: User;
 }
+
+export interface RegisterRequest extends User {
+  password: string;
+  handleSuccess: () => void;
+  handleAPIError: (code: number) => void | null;
+  handleError: (error: unknown) => void | null;
+}
+
 // Common state
 
 export interface State {

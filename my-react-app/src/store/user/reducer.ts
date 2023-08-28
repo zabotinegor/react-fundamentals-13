@@ -1,6 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { Action } from "../interfaces";
-import { LoginRequest, LoginResponse, Response, UserState } from "../../types";
+import {
+  LoginRequest,
+  LoginResponse,
+  RegisterRequest,
+  Response,
+  UserState,
+} from "../../types";
 import { stat } from "fs";
 
 export const initialState: UserState = {
@@ -24,6 +30,13 @@ export const UserReducer = createSlice({
       state.token = action.payload.data?.result || "";
     },
     loginRequest: (state: UserState, action: Action<LoginRequest>) => {
+      // Empty body
+    },
+
+    registerResponse: (state: UserState, action: Action<any>) => {
+      // Empty body
+    },
+    registerRequest: (state: UserState, action: Action<RegisterRequest>) => {
       // Empty body
     },
   },
