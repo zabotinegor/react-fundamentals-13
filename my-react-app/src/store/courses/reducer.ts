@@ -1,11 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
+import {} from "../../types";
 import {
-  Action,
-  Response,
   CoursesState,
-  GetCoursesResponse,
   GetCoursesRequest,
-} from "../../types";
+  GetCoursesResponse,
+} from "../../types/courses";
+import { Action, Response } from "../../types/common";
 
 export const initialState: CoursesState = {
   courses: [],

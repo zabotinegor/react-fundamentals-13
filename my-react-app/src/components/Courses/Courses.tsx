@@ -14,7 +14,7 @@ import {
   selectCourses,
   selectIsCoursesLoading,
 } from "../../store/courses/selectors";
-import { GetCoursesRequest } from "../../types";
+import { GetCoursesRequest } from "../../types/courses";
 
 const Courses: React.FC = () => {
   const dispatch = useDispatch();

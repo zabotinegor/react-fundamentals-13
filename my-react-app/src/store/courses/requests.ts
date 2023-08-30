@@ -1,10 +1,10 @@
-import { GetCoursesRequest } from "./../../types/index";
 import axios from "axios";
 import {
   COURSES_ALL_API_URL,
   COURSES_FILTERED_API_URL,
 } from "../../constants/API";
-import { Response, GetCoursesResponse } from "../../types";
+import { Response } from "../../types/common";
+import { GetCoursesRequest, GetCoursesResponse } from "../../types/courses";
 
 export function getCoursesAPI(
   getCoursesRequest: GetCoursesRequest

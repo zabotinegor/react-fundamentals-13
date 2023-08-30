@@ -1,13 +1,12 @@
 import { takeEvery, call, put } from "typed-redux-saga";
 import { actions } from "./reducer";
+import { Action, Response } from "../../types/common";
+import { addCourseAPI, getCourseAPI } from "./requests";
 import {
-  Action,
-  Response,
   GetCourseRequest,
   GetCourseResponse,
   AddCourseRequest,
-} from "../../types";
-import { addCourseAPI, getCourseAPI } from "./requests";
+} from "../../types/courses";
 
 export function* getCurrentCourse(action: Action<GetCourseRequest>) {
   try {
@@ -31,7 +30,10 @@ export function* getCurrentCourse(action: Action<GetCourseRequest>) {
 
 export function* addCourse(action: Action<AddCourseRequest>) {
   try {
-    const response: Response<any> = yield call(addCourseAPI, action.payload);
+    const response: Response<unknown> = yield call(
+      addCourseAPI,
+      action.payload
+    );
 
     if (response.status === 201) {
       if (action.payload.handleSuccess) {

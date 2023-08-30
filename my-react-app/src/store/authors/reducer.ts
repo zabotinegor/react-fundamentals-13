@@ -1,12 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { Action } from "../interfaces";
+import { Action, Response } from "../../types/common";
 import {
-  Response,
   AuthorsState,
   GetAuthorsResponse,
   CreateAuthorRequest,
-  CreateAuthorResponse,
-} from "../../types";
+} from "../../types/authors";
 
 export const initialState: AuthorsState = {
   authors: [],

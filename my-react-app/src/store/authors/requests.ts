@@ -1,11 +1,11 @@
-import {
-  CreateAuthorRequest,
-  CreateAuthorResponse,
-  GetAuthorsResponse,
-} from "./../../types/index";
 import axios, { AxiosError } from "axios";
 import { AUTHORS_ADD_API_URL, AUTHORS_ALL_API_URL } from "../../constants/API";
-import { Response } from "../../types";
+import { Response } from "../../types/common";
+import {
+  GetAuthorsResponse,
+  CreateAuthorRequest,
+  CreateAuthorResponse,
+} from "../../types/authors";
 
 export function getAuthorsAPI(): Promise<Response<GetAuthorsResponse>> {
   return axios.get(AUTHORS_ALL_API_URL);

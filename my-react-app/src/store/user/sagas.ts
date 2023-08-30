@@ -1,21 +1,20 @@
 import { takeEvery, call, put } from "redux-saga/effects";
 import { actions } from "./reducer";
 import {
-  Action,
-  Response,
+  loginUserAPI,
+  logoutUserAPI,
+  registerUserAPI,
+  userMeAPI,
+} from "./requests";
+import { Action, Response } from "../../types/common";
+import {
   LoginRequest,
   LoginResponse,
   RegisterRequest,
   LogoutRequest,
   UserMeRequest,
   UserMeResponse,
-} from "../../types";
-import {
-  loginUserAPI,
-  logoutUserAPI,
-  registerUserAPI,
-  userMeAPI,
-} from "./requests";
+} from "../../types/user";
 
 export function* loginUser(action: Action<LoginRequest>) {
   try {

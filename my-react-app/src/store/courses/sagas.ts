@@ -1,12 +1,8 @@
 import { takeEvery, call, put } from "typed-redux-saga";
 import { actions } from "./reducer";
-import {
-  Action,
-  Response,
-  GetCoursesRequest,
-  GetCoursesResponse,
-} from "../../types";
 import { getCoursesAPI } from "./requests";
+import { GetCoursesRequest, GetCoursesResponse } from "../../types/courses";
+import { Action, Response } from "../../types/common";
 
 export function* getCourses(action: Action<GetCoursesRequest>) {
   try {

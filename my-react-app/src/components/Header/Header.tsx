@@ -5,10 +5,10 @@ import { useLocation, useNavigate } from "react-router-dom";
 import logo from "./components/Logo/logo.png";
 import Button from "../../common/Button/Button";
 import { LOGIN, REGISTRATION, TOKEN } from "../../constants/Pages";
-import { LogoutRequest } from "../../types";
 import { useDispatch, useSelector } from "react-redux";
 import { actions } from "../../store/user/reducer";
 import { selectUser } from "../../store/user/selectors";
+import { LogoutRequest } from "../../types/user";
 
 const Header: React.FC = () => {
   const dispatch = useDispatch();

@@ -7,7 +7,7 @@ import Input from "../../common/Input/Input";
 import Button from "../../common/Button/Button";
 import { COURSES, REGISTRATION, TOKEN } from "../../constants/Pages";
 import { actions } from "../../store/user/reducer";
-import { LoginRequest } from "../../types";
+import { LoginRequest } from "../../types/user";
 
 const Login: React.FC = () => {
   const dispatch = useDispatch();

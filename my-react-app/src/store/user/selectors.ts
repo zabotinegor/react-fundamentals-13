@@ -1,4 +1,5 @@
-import { State, User } from "../../types";
+import { State } from "../../types";
+import { User } from "../../types/user";
 
 export const selectUser = (state: State): User => state.user;
 export const selectIsAuthenticated = (state: State): boolean =>

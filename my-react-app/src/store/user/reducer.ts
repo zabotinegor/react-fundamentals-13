@@ -1,14 +1,13 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { Action } from "../interfaces";
 import {
-  LoginRequest,
-  LoginResponse,
-  LogoutRequest,
-  RegisterRequest,
-  Response,
-  UserMeResponse,
   UserState,
-} from "../../types";
+  LoginResponse,
+  LoginRequest,
+  RegisterRequest,
+  LogoutRequest,
+  UserMeResponse,
+} from "../../types/user";
+import { Action, Response } from "../../types/common";
 
 export const initialState: UserState = {
   isAuth: false,

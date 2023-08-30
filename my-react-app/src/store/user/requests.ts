@@ -1,18 +1,19 @@
-import {
-  LoginRequest,
-  LogoutRequest,
-  RegisterRequest,
-  UserMeRequest,
-  UserMeResponse,
-} from "./../../types/index";
 import axios, { AxiosError } from "axios";
-import { Response, LoginResponse } from "../../types";
 import {
   LOGIN_API_URL,
   LOGOUT_API_URL,
   REGISTER_API_URL,
   USERS_ME_API_URL,
 } from "../../constants/API";
+import {
+  LoginRequest,
+  LoginResponse,
+  RegisterRequest,
+  LogoutRequest,
+  UserMeRequest,
+  UserMeResponse,
+} from "../../types/user";
+import { Response } from "../../types/common";
 
 export async function loginUserAPI(
   loginRequest: LoginRequest

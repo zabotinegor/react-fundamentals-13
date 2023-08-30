@@ -7,9 +7,10 @@ import { useNavigate } from "react-router-dom";
 import { COURSES, TOKEN } from "../../constants/Pages";
 import { useDispatch, useSelector } from "react-redux";
 import { selectAuthors } from "../../store/authors/selectors";
-import { AddCourseRequest, Author, CreateAuthorRequest } from "../../types";
 import { actions as authorActions } from "../../store/authors/reducer";
 import { actions as courseActions } from "../../store/course/reducer";
+import { Author, CreateAuthorRequest } from "../../types/authors";
+import { AddCourseRequest } from "../../types/courses";
 
 const CreateCourse: React.FC = () => {
   const dispatch = useDispatch();
