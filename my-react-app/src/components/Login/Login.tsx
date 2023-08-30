@@ -1,13 +1,16 @@
+import "./Login.css";
+
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import Input from "../../common/Input/Input";
 import Button from "../../common/Button/Button";
-import { COURSES, REGISTRATION, TOKEN, USER_NAME } from "../../constants/Pages";
-
-import "./Login.css";
-import { loginUserAPI } from "../../helpers/requests";
+import { COURSES, REGISTRATION, TOKEN } from "../../constants/Pages";
+import { actions } from "../../store/user/reducer";
+import { LoginRequest } from "../../types";
 
 const Login: React.FC = () => {
+  const dispatch = useDispatch();
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
@@ -22,19 +25,17 @@ const Login: React.FC = () => {
       return;
     }
 
-    loginUserAPI(
-      email,
-      password,
-      (data) => {
-        localStorage.setItem(TOKEN, data.result);
-        localStorage.setItem(USER_NAME, data.user.name);
+    const loginRequest: LoginRequest = {
+      loginData: { email, password },
+      handleSuccess: (token) => {
+        localStorage.setItem(TOKEN, token);
         navigate(COURSES, { replace: true });
       },
-      (error) => {
-        console.error("Login error:", error);
-        setErrors({ email: "Invalid email or password" });
-      }
-    );
+      handleAPIError: () => setErrors({ email: "Invalid email or password" }),
+      handleError: () => setErrors({ email: "An error occurred" }),
+    };
+
+    dispatch(actions.loginRequest(loginRequest));
   };
 
   return (

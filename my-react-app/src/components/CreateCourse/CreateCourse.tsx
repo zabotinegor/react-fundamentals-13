@@ -1,23 +1,18 @@
-import React, { useState } from "react";
-import Input from "../../common/Input/Input";
-import Button from "../../common/Button/Button";
-import { generateGUID } from "../../helpers/generateGUID";
-import { useNavigate } from "react-router-dom";
-import { COURSES, TOKEN } from "../../constants/Pages";
-import {
-  Course,
-  createAuthorAPI,
-  createCourseAPI,
-} from "../../helpers/requests";
-
 import "./CreateCourse.css";
 
-interface Author {
-  id: string;
-  name: string;
-}
+import React, { useEffect, useState } from "react";
+import Input from "../../common/Input/Input";
+import Button from "../../common/Button/Button";
+import { useNavigate } from "react-router-dom";
+import { COURSES, TOKEN } from "../../constants/Pages";
+import { useDispatch, useSelector } from "react-redux";
+import { selectAuthors } from "../../store/authors/selectors";
+import { AddCourseRequest, Author, CreateAuthorRequest } from "../../types";
+import { actions as authorActions } from "../../store/authors/reducer";
+import { actions as courseActions } from "../../store/course/reducer";
 
 const CreateCourse: React.FC = () => {
+  const dispatch = useDispatch();
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [duration, setDuration] = useState<string>("");
@@ -25,23 +20,17 @@ const CreateCourse: React.FC = () => {
   const [newAuthorName, setNewAuthorName] = useState<string>("");
   const [errors, setErrors] = useState<string[]>([]);
   const navigate = useNavigate();
+  const availableAuthors = useSelector(selectAuthors);
 
-  const createCourse = async (courseData: Course, token: string) => {
-    createCourseAPI(
-      courseData,
-      token,
-      () => {
-        console.log("Course created successfully");
-      },
-      (error) => {
-        console.error("An error occurred:", error);
-      }
-    );
-  };
+  useEffect(() => {
+    dispatch(authorActions.getAuthors());
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
     setErrors([]);
+
     const newErrors: string[] = [];
 
     // Validate title
@@ -74,53 +63,78 @@ const CreateCourse: React.FC = () => {
       return;
     }
 
-    const courseData = {
-      title: title,
-      description: description,
-      duration: parseInt(duration, 10),
-      authors: authors.map((author) => author.id),
-    };
-
     const token = localStorage.getItem(TOKEN);
     if (!token) {
       console.error("Authorization token not found");
       return;
     }
 
-    const authorIds: string[] = [];
-    for (const author of authors) {
-      await createAuthorAPI(
-        author.name,
-        token,
-        (authorId) => {
-          authorIds.push(authorId);
-        },
-        (error) => {
-          console.error(
-            `Author with name ${author.name} creation failed:`,
-            error
-          );
-        }
-      );
-    }
+    const addCourseRequest: AddCourseRequest = {
+      token: token,
+      title: title,
+      description: description,
+      duration: parseInt(duration, 10),
+      authors: authors.map((author) => author.id),
+      handleSuccess: () => {
+        navigate(COURSES, { replace: true });
+      },
+      handleAPIError: (code) => {
+        console.error(`Coould't create course: error code ${code}`);
+        setErrors([...errors, `Coould't create course: error code ${code}`]);
+      },
+      handleError: (error) => {
+        console.error(`Creation course failed: ${error}`, error);
+        setErrors([...errors, `Creation course failed: ${error}`]);
+      },
+    };
 
-    courseData.authors = authorIds;
-
-    await createCourse(courseData, token);
-
-    navigate(COURSES, { replace: true });
+    dispatch(courseActions.addCourse(addCourseRequest));
   };
 
-  const handleAddAuthor = (e: React.MouseEvent) => {
+  const handleNewAuthor = (e: React.MouseEvent) => {
     e.preventDefault();
 
-    if (newAuthorName) {
-      const newAuthor: Author = {
-        id: generateGUID(),
-        name: newAuthorName,
-      };
-      setAuthors([...authors, newAuthor]);
-      setNewAuthorName("");
+    const createAuthorRequest: CreateAuthorRequest = {
+      token: localStorage.getItem(TOKEN) || "",
+      name: newAuthorName,
+      handleSuccess: (newAuthor: Author | null) => {
+        if (newAuthor) {
+          setNewAuthorName("");
+          dispatch(authorActions.getAuthors());
+        } else {
+          console.error(`Created author ${newAuthorName} is null!`);
+          setErrors([...errors, `Created author ${newAuthorName} is null!`]);
+        }
+      },
+      handleAPIError: (code) => {
+        console.error(
+          `Author with name ${newAuthorName} creation failed: error code ${code}`
+        );
+        setErrors([
+          ...errors,
+          `Author with name ${newAuthorName} creation failed: error code ${code}`,
+        ]);
+      },
+      handleError: (error) => {
+        console.error(
+          `Author with name ${newAuthorName} creation failed: ${error}`,
+          error
+        );
+        setErrors([
+          ...errors,
+          `Author with name ${newAuthorName} creation failed: ${error}`,
+        ]);
+      },
+    };
+
+    dispatch(authorActions.addAuthor(createAuthorRequest));
+  };
+
+  const handleAddAvailableAuthor = (e: React.MouseEvent, author: Author) => {
+    e.preventDefault();
+
+    if (!authors.some((existingAuthor) => existingAuthor.id === author.id)) {
+      setAuthors([...authors, author]);
     }
   };
 
@@ -167,40 +181,66 @@ const CreateCourse: React.FC = () => {
           />
         </div>
         <div className="create-course-authors">
-          <label className="create-course-label">Authors:</label>
-          <ul>
-            {authors.map((author) => (
-              <li key={author.id} className="create-course-author">
-                <span className="create-course-author-name">{author.name}</span>{" "}
-                <Button
-                  text="Remove"
-                  onClick={() => handleRemoveAuthor(author.id)}
-                />
-              </li>
-            ))}
-          </ul>
-          <div className="create-course-field">
-            <Input
-              type="text"
-              placeholder="Author's Name"
-              value={newAuthorName}
-              onChange={setNewAuthorName}
-            />
-            <Button
-              className="create-add-author-button"
-              text="Add Author"
-              onClick={handleAddAuthor}
-            />
+          <div className="new-author-list">
+            <h3 className="list-title">Authors:</h3>
+            <ul>
+              {authors.map((author) => (
+                <li key={author.id} className="author-item">
+                  <span className="author-name">{author.name}</span>{" "}
+                  <Button
+                    text="Remove"
+                    onClick={() => handleRemoveAuthor(author.id)}
+                  />
+                </li>
+              ))}
+            </ul>
+            <div className="create-course-field">
+              <Input
+                type="text"
+                placeholder="Author's Name"
+                value={newAuthorName}
+                onChange={setNewAuthorName}
+              />
+              <Button
+                className="create-add-author-button"
+                text="Add Author"
+                onClick={handleNewAuthor}
+              />
+            </div>
+          </div>
+          <div className="available-author-list">
+            <h3 className="list-title">Available authors:</h3>
+            <ul>
+              {availableAuthors.map((author) => (
+                <li key={author.id} className="author-item">
+                  <span className="author-name">{author.name}</span>{" "}
+                  <Button
+                    text="Add"
+                    onClick={(e) => handleAddAvailableAuthor(e, author)}
+                  />
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
-        <div className="create-course-errors">
+        <div className="error-list">
           {errors.map((error, index) => (
-            <p key={index} className="create-course-error">
+            <p key={index} className="error-item">
               {error}
             </p>
           ))}
         </div>
-        <Button text="Create Course" />
+        <div className="button-list">
+          <Button
+            text="Create Course"
+            className="create-course-create-button"
+          />
+          <Button
+            text="Back to Courses"
+            className="create-course-back-button"
+            onClick={() => navigate(COURSES, { replace: true })}
+          />
+        </div>
       </form>
     </div>
   );

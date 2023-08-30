@@ -1,13 +1,16 @@
+import "./Registration.css";
+
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Input from "../../common/Input/Input";
 import Button from "../../common/Button/Button";
 import { LOGIN } from "../../constants/Pages";
-
-import "./Registration.css";
-import { registerUserAPI } from "../../helpers/requests";
+import { RegisterRequest } from "../../types";
+import { actions } from "../../store/user/reducer";
+import { useDispatch } from "react-redux";
 
 const Registration: React.FC = () => {
+  const dispatch = useDispatch();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -23,18 +26,19 @@ const Registration: React.FC = () => {
       return;
     }
 
-    registerUserAPI(
-      name,
-      email,
-      password,
-      () => {
+    const registerRequest: RegisterRequest = {
+      name: name,
+      email: email,
+      password: password,
+      handleSuccess: () => {
         navigate(LOGIN, { replace: true });
       },
-      (error) => {
-        console.error("Register error:", error);
-        setErrors({ email: "Invalid email or password" });
-      }
-    );
+      handleAPIError: () =>
+        setErrors({ apiError: "Invalid email or password" }),
+      handleError: () => setErrors({ error: "An error occurred" }),
+    };
+
+    dispatch(actions.registerRequest(registerRequest));
   };
 
   return (

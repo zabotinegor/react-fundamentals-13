@@ -1,3 +1,5 @@
+import "./Courses.css";
+
 import React, { useState, useEffect } from "react";
 import Course from "./components/CourseCard/CourseCard";
 import EmptyCourseList from "../EmptyCourseList/EmptyCourseList";
@@ -5,58 +7,35 @@ import SearchBar from "./components/SearchBar/SearchBar";
 import { useNavigate } from "react-router-dom";
 import Button from "../../common/Button/Button";
 import { COURSEADD, COURSES } from "../../constants/Pages";
+import { actions as courseActions } from "../../store/courses/reducer";
+import { actions as authorsActions } from "../../store/authors/reducer";
+import { useDispatch, useSelector } from "react-redux";
 import {
-  CourseData,
-  getAllCoursesAPI,
-  getFilteredCoursesAPI,
-} from "../../helpers/requests";
-
-import "./Courses.css";
+  selectCourses,
+  selectIsCoursesLoading,
+} from "../../store/courses/selectors";
+import { GetCoursesRequest } from "../../types";
 
 const Courses: React.FC = () => {
-  const [searchTerm, setSearchTerm] = useState<string>("");
-  const [courses, setCourses] = useState<CourseData[]>([]);
+  const dispatch = useDispatch();
+  const courses = useSelector(selectCourses);
+  const coursesLoading = useSelector(selectIsCoursesLoading);
+  const [coursesRequest, setCoursesRequest] = useState<GetCoursesRequest>({
+    searchTerm: "",
+  });
   const navigate = useNavigate();
 
   useEffect(() => {
-    getCourses();
+    dispatch(courseActions.getCourses(coursesRequest));
+    dispatch(authorsActions.getAuthors());
   }, []);
 
   const handleSearchBar = () => {
-    const lowerCaseSearchTerm = searchTerm.toLowerCase();
-
-    if (lowerCaseSearchTerm === "") {
-      getCourses();
-    } else {
-      getFilteredCourses();
-    }
-  };
-
-  const getCourses = () => {
-    getAllCoursesAPI(
-      (result) => {
-        setCourses(result);
-      },
-      (error) => {
-        console.error("Error fetching course data:", error);
-      }
-    );
-  };
-
-  const getFilteredCourses = () => {
-    getFilteredCoursesAPI(
-      searchTerm,
-      (result) => {
-        setCourses(result);
-      },
-      (error) => {
-        console.error("Error fetching filtered course data:", error);
-      }
-    );
+    dispatch(courseActions.getCourses(coursesRequest));
   };
 
   const handleBackToCourses = () => {
-    setSearchTerm("");
+    setCoursesRequest({ searchTerm: "" });
     navigate(COURSES, { replace: true });
   };
 
@@ -67,30 +46,40 @@ const Courses: React.FC = () => {
   return (
     <div className="courses">
       <SearchBar
-        searchTerm={searchTerm}
-        setSearchTerm={setSearchTerm}
+        searchTerm={coursesRequest.searchTerm || ""}
+        setSearchTerm={(newSearchTerm) =>
+          setCoursesRequest({
+            searchTerm: newSearchTerm.trim(),
+          })
+        }
         onSearch={handleSearchBar}
         onReset={handleBackToCourses}
       />
-      {courses.length !== 0 && (
-        <div className="add-course-button-container">
-          <Button text="Add New Course" onClick={handleAddCourse} />
-        </div>
-      )}
-      {courses.length === 0 ? (
-        <EmptyCourseList />
+      {coursesLoading ? (
+        <div className="loading-icon">Loading...</div> // Display loading icon or message
       ) : (
-        <div className="courses-list">
-          {courses.map((course) => (
-            <Course
-              key={course.id}
-              {...course}
-              onShowCourseInfo={() =>
-                navigate(`${COURSES}/${course.id}`, { replace: true })
-              }
-            />
-          ))}
-        </div>
+        <>
+          {courses.length !== 0 && (
+            <div className="add-course-button-container">
+              <Button text="Add New Course" onClick={handleAddCourse} />
+            </div>
+          )}
+          {courses.length === 0 ? (
+            <EmptyCourseList />
+          ) : (
+            <div className="courses-list">
+              {courses.map((course) => (
+                <Course
+                  key={course.id}
+                  {...course}
+                  onShowCourseInfo={() =>
+                    navigate(`${COURSES}/${course.id}`, { replace: true })
+                  }
+                />
+              ))}
+            </div>
+          )}
+        </>
       )}
     </div>
   );
