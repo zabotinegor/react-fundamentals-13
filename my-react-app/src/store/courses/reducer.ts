@@ -21,7 +21,7 @@ export const CoursesReducer = createSlice({
     ) => {
       state.courses = action.payload.data?.result || [];
     },
-    getCourses: (state: CoursesState, action: Action<GetCoursesRequest>) => {
+    getCourses: (state: any, action: Action<GetCoursesRequest>) => {
       // Empty body
     },
 

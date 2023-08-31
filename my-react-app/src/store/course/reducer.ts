@@ -22,10 +22,7 @@ export const CourseReducer = createSlice({
     ) => {
       state.currentCourse = action.payload.data?.result || null;
     },
-    getCurrentCourse: (
-      state: CourseState,
-      action: Action<GetCourseRequest>
-    ) => {
+    getCurrentCourse: (state: any, action: Action<GetCourseRequest>) => {
       // Empty body
     },
 

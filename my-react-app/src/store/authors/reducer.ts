@@ -21,7 +21,7 @@ export const AuthorsReducer = createSlice({
     ) => {
       state.authors = action.payload.data?.result || [];
     },
-    getAuthors: (state: AuthorsState) => {
+    getAuthors: (state: any) => {
       // Empty body
     },
 
@@ -29,7 +29,7 @@ export const AuthorsReducer = createSlice({
       state.isLoading = action.payload;
     },
 
-    addAuthor: (state: AuthorsState, action: Action<CreateAuthorRequest>) => {
+    addAuthor: (state: any, action: Action<CreateAuthorRequest>) => {
       // Empty body
     },
   },

@@ -30,11 +30,11 @@ export const UserReducer = createSlice({
       state.email = action.payload.data?.user.email || "";
       state.token = action.payload.data?.result || "";
     },
-    loginRequest: (state: UserState, action: Action<LoginRequest>) => {
+    loginRequest: (state: any, action: Action<LoginRequest>) => {
       // Empty body
     },
 
-    registerRequest: (state: UserState, action: Action<RegisterRequest>) => {
+    registerRequest: (state: any, action: Action<RegisterRequest>) => {
       // Empty body
     },
 
@@ -44,7 +44,7 @@ export const UserReducer = createSlice({
       state.email = "";
       state.token = "";
     },
-    logoutRequest: (state: UserState, action: Action<LogoutRequest>) => {
+    logoutRequest: (state: any, action: Action<LogoutRequest>) => {
       // Empty body
     },
 
