@@ -23,7 +23,6 @@ const Header: React.FC = () => {
 
   const handleLogout = () => {
     const logoutRequest: LogoutRequest = {
-      token: localStorage.getItem(TOKEN) || "",
       handleSuccess: () => {
         removeSensetiveData();
       },

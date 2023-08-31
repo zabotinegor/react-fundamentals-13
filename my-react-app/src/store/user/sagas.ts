@@ -12,7 +12,6 @@ import {
   LoginResponse,
   RegisterRequest,
   LogoutRequest,
-  UserMeRequest,
   UserMeResponse,
 } from "../../types/user";
 
@@ -58,10 +57,7 @@ export function* registerUser(action: Action<RegisterRequest>) {
 
 export function* logoutUser(action: Action<LogoutRequest>) {
   try {
-    const response: Response<LoginResponse> = yield call(
-      logoutUserAPI,
-      action.payload
-    );
+    const response: Response<LoginResponse> = yield call(logoutUserAPI);
 
     if (response.status === 200) {
       action.payload.handleSuccess();
@@ -75,12 +71,9 @@ export function* logoutUser(action: Action<LogoutRequest>) {
   }
 }
 
-export function* userMe(action: Action<UserMeRequest>) {
+export function* userMe() {
   try {
-    const response: Response<UserMeResponse> = yield call(
-      userMeAPI,
-      action.payload
-    );
+    const response: Response<UserMeResponse> = yield call(userMeAPI);
 
     if (response.status === 200) {
       yield put(actions.userMeResponse(response));

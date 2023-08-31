@@ -6,6 +6,7 @@ export interface User {
 export interface UserState extends User {
   isAuth: boolean;
   token: string;
+  role: Role | null;
 }
 
 export interface LoginRequest {
@@ -31,16 +32,20 @@ export interface RegisterRequest extends User {
 }
 
 export interface LogoutRequest {
-  token: string;
   handleSuccess: () => void;
   handleAPIError: (code: number) => void | null;
   handleError: (error: unknown) => void | null;
 }
 
-export interface UserMeRequest {
-  token: string;
+export interface UserMeResponse {
+  result: {
+    name: string;
+    email: string;
+    role: Role;
+  };
 }
 
-export interface UserMeResponse {
-  result: User;
+export enum Role {
+  user,
+  admin,
 }

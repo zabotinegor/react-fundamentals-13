@@ -14,6 +14,7 @@ export const initialState: UserState = {
   name: "",
   email: "",
   token: "",
+  role: null,
 };
 
 export const UserReducer = createSlice({
@@ -52,9 +53,10 @@ export const UserReducer = createSlice({
       action: Action<Response<UserMeResponse>>
     ) => {
       (state.name = action.payload.data?.result.name || ""),
-        (state.email = action.payload.data?.result.email || "");
+        (state.email = action.payload.data?.result.email || ""),
+        (state.role = action.payload.data?.result.role || null);
     },
-    userMeRequest: (state: UserState, action: Action<any>) => {
+    userMeRequest: (state: any, action: Action<any>) => {
       // Empty body
     },
   },
