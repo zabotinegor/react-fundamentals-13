@@ -1,5 +1,4 @@
 import { createSlice } from "@reduxjs/toolkit";
-import {} from "../../types";
 import {
   CourseState,
   GetCourseResponse,
@@ -9,7 +8,7 @@ import {
 import { Action, Response } from "../../types/common";
 
 export const initialState: CourseState = {
-  currentCourse: undefined,
+  currentCourse: null,
   isLoading: false,
 };
 
@@ -21,7 +20,7 @@ export const CourseReducer = createSlice({
       state: CourseState,
       action: Action<Response<GetCourseResponse>>
     ) => {
-      state.currentCourse = action.payload.data?.result;
+      state.currentCourse = action.payload.data?.result || null;
     },
     getCurrentCourse: (
       state: CourseState,
@@ -37,7 +36,7 @@ export const CourseReducer = createSlice({
       state.isLoading = action.payload;
     },
 
-    addCourse: (state: unknown, action: Action<AddCourseRequest>) => {
+    addCourse: (state: any, action: Action<AddCourseRequest>) => {
       // Empty body
     },
   },

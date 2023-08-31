@@ -7,51 +7,29 @@ import {
   AddCourseRequest,
 } from "../../types/courses";
 
-export function getCourseAPI(
+export async function getCourseAPI(
   getCourseRequest: GetCourseRequest
 ): Promise<Response<GetCourseResponse>> {
   const courseId = getCourseRequest.courseId;
 
-  return axios
-    .get(`${COURSES_API_URL}/${courseId}`)
-    .then((response) => response)
-    .catch((error) => {
-      const axiosError = error as AxiosError;
-
-      if (axiosError.response) {
-        return axiosError.response as Response<any>;
-      } else {
-        throw axiosError;
-      }
-    });
+  try {
+    return await axios.get(`${COURSES_API_URL}/${courseId}`);
+  } catch (error) {
+    return (error as AxiosError).response as Response<any>;
+  }
 }
 
 export async function addCourseAPI(
   addCourseRequest: AddCourseRequest
-): Promise<Response<unknown>> {
+): Promise<Response<any>> {
   try {
-    return await axios.post(
-      COURSES_ADD_API_URL,
-      {
-        title: addCourseRequest.title,
-        description: addCourseRequest.description,
-        duration: addCourseRequest.duration,
-        authors: addCourseRequest.authors,
-      },
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: addCourseRequest.token,
-        },
-      }
-    );
+    return await axios.post(COURSES_ADD_API_URL, {
+      title: addCourseRequest.title,
+      description: addCourseRequest.description,
+      duration: addCourseRequest.duration,
+      authors: addCourseRequest.authors,
+    });
   } catch (error) {
-    const axiosError = error as AxiosError;
-
-    if (axiosError.response) {
-      return axiosError.response as Response<unknown>;
-    } else {
-      throw axiosError;
-    }
+    return (error as AxiosError).response as Response<any>;
   }
 }

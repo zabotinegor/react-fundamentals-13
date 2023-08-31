@@ -22,7 +22,7 @@ export async function loginUserAPI(
       password: loginRequest.loginData.password,
     });
   } catch (error) {
-    return (error as AxiosError).response as Response<LoginResponse>;
+    return (error as AxiosError).response as Response<any>;
   }
 }
 

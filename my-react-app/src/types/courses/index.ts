@@ -13,7 +13,7 @@ export interface CoursesState {
 }
 
 export interface CourseState {
-  currentCourse: Course | undefined;
+  currentCourse: Course | null;
   isLoading: boolean;
 }
 

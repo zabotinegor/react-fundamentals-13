@@ -1,5 +1,4 @@
 import { createSlice } from "@reduxjs/toolkit";
-import {} from "../../types";
 import {
   CoursesState,
   GetCoursesRequest,
