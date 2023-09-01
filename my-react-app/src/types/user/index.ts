@@ -41,11 +41,11 @@ export interface UserMeResponse {
   result: {
     name: string;
     email: string;
-    role: Role;
+    role: string;
   };
 }
 
 export enum Role {
-  user,
-  admin,
+  user = "user",
+  admin = "admin",
 }

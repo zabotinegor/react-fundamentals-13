@@ -1,6 +1,5 @@
 import "./Header.css";
 
-import React, { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import logo from "./components/Logo/logo.png";
 import Button from "../../common/Button/Button";
@@ -14,7 +13,7 @@ const Header: React.FC = () => {
   const dispatch = useDispatch();
   const location = useLocation();
   const navigate = useNavigate();
-  const userInfo = useSelector(selectUser);
+  const user = useSelector(selectUser);
 
   const removeSensetiveData = () => {
     localStorage.removeItem(TOKEN);
@@ -39,14 +38,6 @@ const Header: React.FC = () => {
     dispatch(actions.logoutRequest(logoutRequest));
   };
 
-  useEffect(() => {
-    if (userInfo.name === "") {
-      dispatch(
-        actions.userMeRequest({ token: localStorage.getItem(TOKEN) || "" })
-      );
-    }
-  }, []);
-
   const renderHeaderContent = () => {
     if (location.pathname !== LOGIN && location.pathname !== REGISTRATION) {
       return (
@@ -55,8 +46,8 @@ const Header: React.FC = () => {
             <img src={logo} alt="Logo" />
           </div>
           <div className="button-container">
-            {userInfo.name && (
-              <span className="username">Welcome, {userInfo.name}! </span>
+            {user.name && (
+              <span className="username">Welcome, {user.name}! </span>
             )}
             <Button text="Logout" onClick={handleLogout} />
           </div>

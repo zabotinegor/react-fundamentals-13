@@ -3,9 +3,18 @@ import Header from "./components/Header/Header";
 import Courses from "./components/Courses/Courses";
 import Login from "./components/Login/Login";
 import Registration from "./components/Registration/Registration";
-import { COURSEINFO, COURSES, LOGIN, REGISTRATION } from "./constants/Pages";
+import {
+  COURSEADD,
+  COURSEINFO,
+  COURSES,
+  LOGIN,
+  REGISTRATION,
+} from "./constants/Pages";
 import AuthPrivateRoute from "./routes/AuthPrivateRoute";
 import CourseInfo from "./components/CourseInfo/CourseInfo";
+import RolePrivateRoute from "./routes/RolesPrivateRoute";
+import CreateCourse from "./components/CreateCourse/CreateCourse";
+import { Role } from "./types/user";
 
 function App() {
   return (
@@ -33,6 +42,14 @@ function MainContent() {
       <Route path="/" element={<Navigate to={COURSES} replace />} />
       <Route path={COURSES} element={<Courses />} />
       <Route path={COURSEINFO} element={<CourseInfo />} />
+      <Route
+        path={COURSEADD}
+        element={
+          <RolePrivateRoute requiredRoles={[Role.admin]}>
+            <CreateCourse />
+          </RolePrivateRoute>
+        }
+      />
     </Routes>
   );
 }

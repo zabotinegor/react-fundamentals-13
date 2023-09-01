@@ -1,0 +1,22 @@
+.no-access-container {
+    text-align: center;
+    padding: 20px;
+    background-color: #f8f8f8;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .no-access-container h2 {
+    color: #d9534f;
+  }
+  
+  .no-access-container p {
+    margin: 10px 0;
+  }
+  
+  .no-access-container a {
+    color: #31708f;
+    text-decoration: underline;
+  }
+  

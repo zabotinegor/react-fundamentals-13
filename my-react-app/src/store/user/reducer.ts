@@ -6,8 +6,10 @@ import {
   RegisterRequest,
   LogoutRequest,
   UserMeResponse,
+  Role,
 } from "../../types/user";
 import { Action, Response } from "../../types/common";
+import { stringToEnum } from "../../helpers/stringToEnum";
 
 export const initialState: UserState = {
   isAuth: false,
@@ -43,6 +45,7 @@ export const UserReducer = createSlice({
       state.name = "";
       state.email = "";
       state.token = "";
+      state.role = null;
     },
     logoutRequest: (state: any, action: Action<LogoutRequest>) => {
       // Empty body
@@ -54,9 +57,11 @@ export const UserReducer = createSlice({
     ) => {
       (state.name = action.payload.data?.result.name || ""),
         (state.email = action.payload.data?.result.email || ""),
-        (state.role = action.payload.data?.result.role || null);
+        (state.role = action.payload.data?.result.role
+          ? stringToEnum(Role, action.payload.data?.result.role) || null
+          : null);
     },
-    userMeRequest: (state: any, action: Action<any>) => {
+    userMeRequest: (state: any) => {
       // Empty body
     },
   },
