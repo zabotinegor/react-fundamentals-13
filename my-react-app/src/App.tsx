@@ -8,6 +8,7 @@ import {
   COURSEINFO,
   COURSES,
   LOGIN,
+  NOACCESS,
   REGISTRATION,
 } from "./constants/Pages";
 import AuthPrivateRoute from "./routes/AuthPrivateRoute";
@@ -15,6 +16,7 @@ import CourseInfo from "./components/CourseInfo/CourseInfo";
 import RolePrivateRoute from "./routes/RolesPrivateRoute";
 import CreateCourse from "./components/CreateCourse/CreateCourse";
 import { Role } from "./types/user";
+import NoAccess from "./components/NoAccess/NoAccess";
 
 function App() {
   return (
@@ -42,6 +44,7 @@ function MainContent() {
       <Route path="/" element={<Navigate to={COURSES} replace />} />
       <Route path={COURSES} element={<Courses />} />
       <Route path={COURSEINFO} element={<CourseInfo />} />
+      <Route path={NOACCESS} element={<NoAccess />} />
       <Route
         path={COURSEADD}
         element={

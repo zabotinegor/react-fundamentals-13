@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
-import { LOGIN } from "../constants/Pages";
+import { LOGIN, NOACCESS } from "../constants/Pages";
 import {
   selectRole,
   selectStorageToken,
@@ -20,6 +20,7 @@ const AuthPrivateRoute: React.FC<AuthPrivateRouteProps> = ({ children }) => {
   const user = useSelector(selectUser);
   const userRole = useSelector(selectRole);
   const navigate = useNavigate();
+
   const isTokenValid = token && token !== "";
 
   useEffect(() => {
@@ -31,6 +32,8 @@ const AuthPrivateRoute: React.FC<AuthPrivateRouteProps> = ({ children }) => {
         handleAPIError: (status) => {
           if (status === 401) {
             navigate(LOGIN, { replace: true });
+          } else if (status === 403) {
+            navigate(NOACCESS, { replace: true });
           }
         },
       };

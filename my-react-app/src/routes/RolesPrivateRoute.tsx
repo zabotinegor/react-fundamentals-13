@@ -3,6 +3,8 @@ import { useSelector } from "react-redux";
 import { selectRole } from "../store/user/selectors";
 import { Role } from "../types/user";
 import NoAccess from "../components/NoAccess/NoAccess";
+import { Navigate } from "react-router-dom";
+import { NOACCESS } from "../constants/Pages";
 
 interface RolePrivateRouteProps {
   requiredRoles: Role[];
@@ -18,7 +20,7 @@ const RolePrivateRoute: React.FC<RolePrivateRouteProps> = ({
   if (userRole && requiredRoles.includes(userRole)) {
     return children;
   } else {
-    return <NoAccess />;
+    return <Navigate to={NOACCESS} replace />;
   }
 };
 
