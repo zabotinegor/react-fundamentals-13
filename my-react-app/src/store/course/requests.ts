@@ -5,6 +5,7 @@ import {
   GetCourseRequest,
   GetCourseResponse,
   AddCourseRequest,
+  DeleteCourseRequest,
 } from "../../types/courses";
 
 export async function getCourseAPI(
@@ -29,6 +30,18 @@ export async function addCourseAPI(
       duration: addCourseRequest.duration,
       authors: addCourseRequest.authors,
     });
+  } catch (error) {
+    return (error as AxiosError).response as Response<any>;
+  }
+}
+
+export async function deleteCourseAPI(
+  deleteCourseRequest: DeleteCourseRequest
+): Promise<Response<any>> {
+  try {
+    const courseId = deleteCourseRequest.courseId;
+
+    return await axios.delete(`${COURSES_API_URL}/${courseId}`);
   } catch (error) {
     return (error as AxiosError).response as Response<any>;
   }

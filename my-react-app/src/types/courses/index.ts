@@ -42,3 +42,8 @@ export interface AddCourseRequest extends Request {
   authors: string[];
   handleSuccess: () => void;
 }
+
+export interface DeleteCourseRequest extends Request {
+  courseId: string;
+  handleSuccess: () => void;
+}

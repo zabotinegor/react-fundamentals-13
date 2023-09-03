@@ -4,6 +4,8 @@ import {
   GetCourseResponse,
   GetCourseRequest,
   AddCourseRequest,
+  DeleteCourseRequest,
+  CoursesState,
 } from "../../types/courses";
 import { Action, Response } from "../../types/common";
 
@@ -34,6 +36,10 @@ export const CourseReducer = createSlice({
     },
 
     addCourse: (state: any, action: Action<AddCourseRequest>) => {
+      // Empty body
+    },
+
+    deleteCourse: (state: any, action: Action<DeleteCourseRequest>) => {
       // Empty body
     },
   },

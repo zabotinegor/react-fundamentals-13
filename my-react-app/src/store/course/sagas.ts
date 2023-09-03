@@ -1,14 +1,16 @@
 import { takeEvery, call, put } from "typed-redux-saga";
 import { actions } from "./reducer";
+import { actions as coursesActions } from "../courses/reducer";
 import { Action, Response } from "../../types/common";
-import { addCourseAPI, getCourseAPI } from "./requests";
+import { addCourseAPI, deleteCourseAPI, getCourseAPI } from "./requests";
 import {
   GetCourseRequest,
   GetCourseResponse,
   AddCourseRequest,
+  DeleteCourseRequest,
 } from "../../types/courses";
 
-export function* getCurrentCourse(action: Action<GetCourseRequest>) {
+export function* getCourse(action: Action<GetCourseRequest>) {
   try {
     yield put(actions.setCurrentCourseIsLoading(true));
 
@@ -52,10 +54,36 @@ export function* addCourse(action: Action<AddCourseRequest>) {
   }
 }
 
-export function* getCurrentCourseSaga() {
-  yield takeEvery(actions.getCurrentCourse, getCurrentCourse);
+export function* deleteCourse(action: Action<DeleteCourseRequest>) {
+  try {
+    const response: Response<unknown> = yield call(
+      deleteCourseAPI,
+      action.payload
+    );
+
+    if (response.status === 200) {
+      yield put(coursesActions.removeCourse(action.payload.courseId));
+      if (action.payload.handleSuccess) {
+        action.payload.handleSuccess();
+      }
+    } else if (action.payload.handleAPIError) {
+      action.payload.handleAPIError(response.status);
+    }
+  } catch (error) {
+    if (action.payload.handleError) {
+      action.payload.handleError(error);
+    }
+  }
+}
+
+export function* getCourseSaga() {
+  yield takeEvery(actions.getCurrentCourse, getCourse);
 }
 
 export function* addCourseSaga() {
   yield takeEvery(actions.addCourse, addCourse);
+}
+
+export function* deleteCourseSaga() {
+  yield takeEvery(actions.deleteCourse, deleteCourse);
 }

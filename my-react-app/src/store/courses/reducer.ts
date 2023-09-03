@@ -28,6 +28,12 @@ export const CoursesReducer = createSlice({
     setCoursesIsLoading: (state: CoursesState, action: Action<boolean>) => {
       state.isLoading = action.payload;
     },
+
+    removeCourse: (state: CoursesState, action: Action<string>) => {
+      state.courses = state.courses.filter(
+        (course) => course.id != action.payload
+      );
+    },
   },
 });
 
