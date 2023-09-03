@@ -8,10 +8,9 @@ import {
   GetUserInfoResponse,
   Role,
 } from "../../types/user";
-import { Action, Response } from "../../types/common";
+import { Action, Response, Request } from "../../types/common";
 import { stringToEnum } from "../../helpers/stringToEnum";
 import { TOKEN } from "../../constants/Pages";
-
 export const initialState: UserState = {
   isAuth: false,
   name: "",
@@ -63,7 +62,7 @@ export const UserReducer = createSlice({
           ? stringToEnum(Role, action.payload.data?.result.role) || null
           : null);
     },
-    getUserInfo: (state: any) => {
+    getUserInfo: (state: any, action: Action<Request>) => {
       // Empty body
     },
   },

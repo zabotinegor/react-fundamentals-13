@@ -6,7 +6,7 @@ import {
   registerUserAPI,
   userMeAPI,
 } from "./requests";
-import { Action, Response } from "../../types/common";
+import { Action, Request, Response } from "../../types/common";
 import {
   LoginRequest,
   LoginResponse,
@@ -73,17 +73,19 @@ export function* logoutUser(action: Action<LogoutRequest>) {
   }
 }
 
-export function* getUserInfo() {
+export function* getUserInfo(action: Action<Request>) {
   try {
     const response: Response<GetUserInfoResponse> = yield call(userMeAPI);
 
     if (response.status === 200) {
       yield put(actions.setUserInfo(response));
-    } else {
-      throw Error();
+    } else if (action.payload.handleAPIError) {
+      action.payload.handleAPIError(response.status);
     }
   } catch (error) {
-    // ignore
+    if (action.payload.handleError) {
+      action.payload.handleError(error);
+    }
   }
 }
 

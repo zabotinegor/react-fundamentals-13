@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Navigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import { LOGIN } from "../constants/Pages";
 import {
   selectRole,
@@ -8,6 +8,7 @@ import {
 } from "../store/user/selectors";
 import { useDispatch, useSelector } from "react-redux";
 import { actions } from "../store/user/reducer";
+import { Request } from "../types/common";
 
 interface AuthPrivateRouteProps {
   children: React.ReactNode;
@@ -18,6 +19,7 @@ const AuthPrivateRoute: React.FC<AuthPrivateRouteProps> = ({ children }) => {
   const token = useSelector(selectStorageToken);
   const user = useSelector(selectUser);
   const userRole = useSelector(selectRole);
+  const navigate = useNavigate();
   const isTokenValid = token && token !== "";
 
   useEffect(() => {
@@ -25,7 +27,15 @@ const AuthPrivateRoute: React.FC<AuthPrivateRouteProps> = ({ children }) => {
       isTokenValid &&
       (!user || !user.name || user.name === "" || !userRole)
     ) {
-      dispatch(actions.getUserInfo());
+      const request: Request = {
+        handleAPIError: (status) => {
+          if (status === 401) {
+            navigate(LOGIN, { replace: true });
+          }
+        },
+      };
+
+      dispatch(actions.getUserInfo(request));
     }
   }, []);
 
