@@ -9,7 +9,7 @@ import {
   LoginRequest,
   LoginResponse,
   RegisterRequest,
-  UserMeResponse,
+  GetUserInfoResponse,
 } from "../../types/user";
 import { Response } from "../../types/common";
 
@@ -48,7 +48,7 @@ export async function logoutUserAPI(): Promise<Response<any>> {
   }
 }
 
-export async function userMeAPI(): Promise<Response<UserMeResponse>> {
+export async function userMeAPI(): Promise<Response<GetUserInfoResponse>> {
   try {
     return await axios.get(USERS_ME_API_URL);
   } catch (error) {

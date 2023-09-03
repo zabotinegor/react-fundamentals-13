@@ -27,15 +27,14 @@ const Login: React.FC = () => {
 
     const loginRequest: LoginRequest = {
       loginData: { email, password },
-      handleSuccess: (token) => {
-        localStorage.setItem(TOKEN, token);
+      handleSuccess: () => {
         navigate(COURSES, { replace: true });
       },
       handleAPIError: () => setErrors({ email: "Invalid email or password" }),
       handleError: () => setErrors({ email: "An error occurred" }),
     };
 
-    dispatch(actions.loginRequest(loginRequest));
+    dispatch(actions.loginUser(loginRequest));
   };
 
   return (

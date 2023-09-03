@@ -16,11 +16,14 @@ export function* getCourses(action: Action<GetCoursesRequest>) {
     if (response.status === 200) {
       yield put(actions.setCourses(response));
       yield put(actions.setCoursesIsLoading(false));
-    } else {
-      throw new Error();
+    } else if (action.payload.handleAPIError) {
+      action.payload.handleAPIError(response.status);
     }
   } catch (error) {
     yield put(actions.setCoursesIsLoading(false));
+    if (action.payload.handleError) {
+      action.payload.handleError(error);
+    }
   }
 }
 

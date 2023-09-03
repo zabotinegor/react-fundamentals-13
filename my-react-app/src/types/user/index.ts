@@ -1,3 +1,5 @@
+import { Request } from "../common";
+
 export interface User {
   name: string;
   email: string;
@@ -9,14 +11,12 @@ export interface UserState extends User {
   role: Role | null;
 }
 
-export interface LoginRequest {
+export interface LoginRequest extends Request {
   loginData: {
     email: string;
     password: string;
   };
-  handleSuccess: (token: string) => void;
-  handleAPIError: (code: number) => void | null;
-  handleError: (error: unknown) => void | null;
+  handleSuccess: () => void;
 }
 
 export interface LoginResponse {
@@ -24,20 +24,16 @@ export interface LoginResponse {
   user: User;
 }
 
-export interface RegisterRequest extends User {
+export interface RegisterRequest extends User, Request {
   password: string;
   handleSuccess: () => void;
-  handleAPIError: (code: number) => void | null;
-  handleError: (error: unknown) => void | null;
 }
 
-export interface LogoutRequest {
+export interface LogoutRequest extends Request {
   handleSuccess: () => void;
-  handleAPIError: (code: number) => void | null;
-  handleError: (error: unknown) => void | null;
 }
 
-export interface UserMeResponse {
+export interface GetUserInfoResponse {
   result: {
     name: string;
     email: string;

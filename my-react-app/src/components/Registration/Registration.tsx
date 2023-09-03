@@ -38,7 +38,7 @@ const Registration: React.FC = () => {
       handleError: () => setErrors({ error: "An error occurred" }),
     };
 
-    dispatch(actions.registerRequest(registerRequest));
+    dispatch(actions.registerUser(registerRequest));
   };
 
   return (

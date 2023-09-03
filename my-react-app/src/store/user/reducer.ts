@@ -5,11 +5,12 @@ import {
   LoginRequest,
   RegisterRequest,
   LogoutRequest,
-  UserMeResponse,
+  GetUserInfoResponse,
   Role,
 } from "../../types/user";
 import { Action, Response } from "../../types/common";
 import { stringToEnum } from "../../helpers/stringToEnum";
+import { TOKEN } from "../../constants/Pages";
 
 export const initialState: UserState = {
   isAuth: false,
@@ -23,37 +24,38 @@ export const UserReducer = createSlice({
   name: "user",
   initialState: initialState,
   reducers: {
-    loginResponse: (
-      state: UserState,
-      action: Action<Response<LoginResponse>>
-    ) => {
+    setUser: (state: UserState, action: Action<Response<LoginResponse>>) => {
       state.isAuth = true;
       state.name = action.payload.data?.user.name || "";
       state.email = action.payload.data?.user.email || "";
       state.token = action.payload.data?.result || "";
+
+      localStorage.setItem(TOKEN, state.token);
     },
-    loginRequest: (state: any, action: Action<LoginRequest>) => {
+    loginUser: (state: any, action: Action<LoginRequest>) => {
       // Empty body
     },
 
-    registerRequest: (state: any, action: Action<RegisterRequest>) => {
+    registerUser: (state: any, action: Action<RegisterRequest>) => {
       // Empty body
     },
 
-    logoutResponse: (state: UserState, action: Action<any>) => {
+    removeUser: (state: UserState) => {
       state.isAuth = false;
       state.name = "";
       state.email = "";
       state.token = "";
       state.role = null;
+
+      localStorage.removeItem(TOKEN);
     },
-    logoutRequest: (state: any, action: Action<LogoutRequest>) => {
+    logoutUser: (state: any, action: Action<LogoutRequest>) => {
       // Empty body
     },
 
-    userMeResponse: (
+    setUserInfo: (
       state: UserState,
-      action: Action<Response<UserMeResponse>>
+      action: Action<Response<GetUserInfoResponse>>
     ) => {
       (state.name = action.payload.data?.result.name || ""),
         (state.email = action.payload.data?.result.email || ""),
@@ -61,7 +63,7 @@ export const UserReducer = createSlice({
           ? stringToEnum(Role, action.payload.data?.result.role) || null
           : null);
     },
-    userMeRequest: (state: any) => {
+    getUserInfo: (state: any) => {
       // Empty body
     },
   },

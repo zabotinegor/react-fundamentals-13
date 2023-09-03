@@ -1,3 +1,5 @@
+import { Request } from "../common";
+
 export interface Author {
   id: string;
   name: string;
@@ -12,12 +14,9 @@ export interface GetAuthorsResponse {
   result: Author[] | null;
 }
 
-export interface CreateAuthorRequest {
-  token: string;
+export interface CreateAuthorRequest extends Request {
   name: string;
   handleSuccess: (author: Author | null) => void;
-  handleAPIError: (code: number) => void | null;
-  handleError: (error: unknown) => void | null;
 }
 
 export interface CreateAuthorResponse {

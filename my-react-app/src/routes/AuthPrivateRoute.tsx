@@ -25,7 +25,7 @@ const AuthPrivateRoute: React.FC<AuthPrivateRouteProps> = ({ children }) => {
       isTokenValid &&
       (!user || !user.name || user.name === "" || !userRole)
     ) {
-      dispatch(actions.userMeRequest());
+      dispatch(actions.getUserInfo());
     }
   }, []);
 

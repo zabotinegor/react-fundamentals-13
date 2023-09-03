@@ -15,27 +15,14 @@ const Header: React.FC = () => {
   const navigate = useNavigate();
   const user = useSelector(selectUser);
 
-  const removeSensetiveData = () => {
-    localStorage.removeItem(TOKEN);
-    navigate(LOGIN);
-  };
-
   const handleLogout = () => {
     const logoutRequest: LogoutRequest = {
       handleSuccess: () => {
-        removeSensetiveData();
-      },
-      handleAPIError: () => {
-        console.error("API error occurred");
-        removeSensetiveData();
-      },
-      handleError: (error) => {
-        console.error(error);
-        removeSensetiveData();
+        navigate(LOGIN);
       },
     };
 
-    dispatch(actions.logoutRequest(logoutRequest));
+    dispatch(actions.logoutUser(logoutRequest));
   };
 
   const renderHeaderContent = () => {

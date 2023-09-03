@@ -36,27 +36,27 @@ const CreateCourse: React.FC = () => {
 
     // Validate title
     if (title.length < 2) {
-      newErrors.push("Title must be at least 2 characters");
+      newErrors.push("Title must be at least 2 characters.");
     }
 
     // Validate description
     if (description.length < 2) {
-      newErrors.push("Description must be at least 2 characters");
+      newErrors.push("Description must be at least 2 characters.");
     }
 
     // Validate duration
     if (!/^\d+$/.test(duration)) {
-      newErrors.push("Duration must be ONLY numbers");
+      newErrors.push("Duration must be ONLY numbers.");
     } else {
       const parsedDuration = parseInt(duration, 10);
       if (parsedDuration <= 0) {
-        newErrors.push("Duration must be more than 0 minutes");
+        newErrors.push("Duration must be more than 0 minutes.");
       }
     }
 
     // Validate authors
     if (authors.length === 0) {
-      newErrors.push("At least one author is required");
+      newErrors.push("At least one author is required.");
     }
 
     if (newErrors.length > 0) {
@@ -66,12 +66,11 @@ const CreateCourse: React.FC = () => {
 
     const token = localStorage.getItem(TOKEN);
     if (!token) {
-      console.error("Authorization token not found");
+      console.error("Authorization token not found.");
       return;
     }
 
     const addCourseRequest: AddCourseRequest = {
-      token: token,
       title: title,
       description: description,
       duration: parseInt(duration, 10),
@@ -80,12 +79,10 @@ const CreateCourse: React.FC = () => {
         navigate(COURSES, { replace: true });
       },
       handleAPIError: (code) => {
-        console.error(`Coould't create course: error code ${code}`);
-        setErrors([...errors, `Coould't create course: error code ${code}`]);
+        setErrors([`Could't create course: error code ${code}.`]);
       },
       handleError: (error) => {
-        console.error(`Creation course failed: ${error}`, error);
-        setErrors([...errors, `Creation course failed: ${error}`]);
+        setErrors([`Creation course failed: ${error}.`]);
       },
     };
 
@@ -95,35 +92,29 @@ const CreateCourse: React.FC = () => {
   const handleNewAuthor = (e: React.MouseEvent) => {
     e.preventDefault();
 
+    if (newAuthorName === "") {
+      setErrors(["Please, add name of author."]);
+      return;
+    }
+
     const createAuthorRequest: CreateAuthorRequest = {
-      token: localStorage.getItem(TOKEN) || "",
       name: newAuthorName,
       handleSuccess: (newAuthor: Author | null) => {
         if (newAuthor) {
           setNewAuthorName("");
           dispatch(authorActions.getAuthors());
         } else {
-          console.error(`Created author ${newAuthorName} is null!`);
-          setErrors([...errors, `Created author ${newAuthorName} is null!`]);
+          setErrors([`Created author ${newAuthorName} is null!`]);
         }
       },
       handleAPIError: (code) => {
-        console.error(
-          `Author with name ${newAuthorName} creation failed: error code ${code}`
-        );
         setErrors([
-          ...errors,
-          `Author with name ${newAuthorName} creation failed: error code ${code}`,
+          `Author with name ${newAuthorName} creation failed: error code ${code}.`,
         ]);
       },
       handleError: (error) => {
-        console.error(
-          `Author with name ${newAuthorName} creation failed: ${error}`,
-          error
-        );
         setErrors([
-          ...errors,
-          `Author with name ${newAuthorName} creation failed: ${error}`,
+          `Author with name ${newAuthorName} creation failed: ${error}.`,
         ]);
       },
     };

@@ -9,8 +9,8 @@ const authMiddleware: Middleware = () => (next) => (action) => {
   const token = localStorage.getItem(TOKEN);
 
   if (
-    action.type === userActions.userMeRequest.type ||
-    action.type === userActions.logoutRequest.type ||
+    action.type === userActions.getUserInfo.type ||
+    action.type === userActions.logoutUser.type ||
     action.type === courseActions.addCourse.type ||
     action.type === authorsActions.addAuthor.type
   ) {

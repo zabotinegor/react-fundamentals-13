@@ -20,11 +20,14 @@ export function* getCurrentCourse(action: Action<GetCourseRequest>) {
     if (response.status === 200) {
       yield put(actions.setCurrentCourse(response));
       yield put(actions.setCurrentCourseIsLoading(false));
-    } else {
-      throw new Error();
+    } else if (action.payload.handleAPIError) {
+      action.payload.handleAPIError(response.status);
     }
   } catch (error) {
     yield put(actions.setCurrentCourseIsLoading(false));
+    if (action.payload.handleError) {
+      action.payload.handleError(error);
+    }
   }
 }
 
