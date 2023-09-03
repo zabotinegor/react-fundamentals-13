@@ -44,6 +44,10 @@ export interface AddCourseRequest extends Request {
   handleSuccess: () => void;
 }
 
+export interface UpdateCourseRequest extends AddCourseRequest {
+  courseId: string;
+}
+
 export interface DeleteCourseRequest extends Request {
   courseId: string;
   handleSuccess: () => void;

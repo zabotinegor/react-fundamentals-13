@@ -13,6 +13,7 @@ const authMiddleware: Middleware = () => (next) => (action) => {
     action.type === userActions.logoutUser.type ||
     action.type === courseActions.addCourse.type ||
     action.type === courseActions.deleteCourse.type ||
+    action.type === courseActions.updateCourse.type ||
     action.type === authorsActions.addAuthor.type
   ) {
     axios.defaults.headers.common["Authorization"] = token;

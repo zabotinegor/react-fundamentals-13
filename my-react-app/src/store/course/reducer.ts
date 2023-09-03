@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { Update, createSlice } from "@reduxjs/toolkit";
 import {
   CourseState,
   GetCourseResponse,
@@ -6,6 +6,7 @@ import {
   AddCourseRequest,
   DeleteCourseRequest,
   CoursesState,
+  UpdateCourseRequest,
 } from "../../types/courses";
 import { Action, Response } from "../../types/common";
 
@@ -40,6 +41,10 @@ export const CourseReducer = createSlice({
     },
 
     deleteCourse: (state: any, action: Action<DeleteCourseRequest>) => {
+      // Empty body
+    },
+
+    updateCourse: (state: any, action: Action<UpdateCourseRequest>) => {
       // Empty body
     },
   },

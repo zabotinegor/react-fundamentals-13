@@ -2,12 +2,18 @@ import { takeEvery, call, put } from "typed-redux-saga";
 import { actions } from "./reducer";
 import { actions as coursesActions } from "../courses/reducer";
 import { Action, Response } from "../../types/common";
-import { addCourseAPI, deleteCourseAPI, getCourseAPI } from "./requests";
+import {
+  addCourseAPI,
+  deleteCourseAPI,
+  getCourseAPI,
+  updateCourseAPI,
+} from "./requests";
 import {
   GetCourseRequest,
   GetCourseResponse,
   AddCourseRequest,
   DeleteCourseRequest,
+  UpdateCourseRequest,
 } from "../../types/courses";
 
 export function* getCourse(action: Action<GetCourseRequest>) {
@@ -57,6 +63,27 @@ export function* addCourse(action: Action<AddCourseRequest>) {
   }
 }
 
+export function* updateCourse(action: Action<UpdateCourseRequest>) {
+  try {
+    const response: Response<unknown> = yield call(
+      updateCourseAPI,
+      action.payload
+    );
+
+    if (response.status === 200) {
+      if (action.payload.handleSuccess) {
+        action.payload.handleSuccess();
+      }
+    } else if (action.payload.handleAPIError) {
+      action.payload.handleAPIError(response.status);
+    }
+  } catch (error) {
+    if (action.payload.handleError) {
+      action.payload.handleError(error);
+    }
+  }
+}
+
 export function* deleteCourse(action: Action<DeleteCourseRequest>) {
   try {
     const response: Response<unknown> = yield call(
@@ -85,6 +112,10 @@ export function* getCourseSaga() {
 
 export function* addCourseSaga() {
   yield takeEvery(actions.addCourse, addCourse);
+}
+
+export function* updateCourseSaga() {
+  yield takeEvery(actions.updateCourse, updateCourse);
 }
 
 export function* deleteCourseSaga() {

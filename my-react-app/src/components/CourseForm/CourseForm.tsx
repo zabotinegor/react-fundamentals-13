@@ -10,18 +10,19 @@ import { selectAuthors } from "../../store/authors/selectors";
 import { actions as authorActions } from "../../store/authors/reducer";
 import { actions as courseActions } from "../../store/course/reducer";
 import { Author, CreateAuthorRequest } from "../../types/authors";
-import { AddCourseRequest, GetCourseRequest } from "../../types/courses";
-import { selectCurrentCourse } from "../../store/course/selectors";
+import {
+  AddCourseRequest,
+  GetCourseRequest,
+  UpdateCourseRequest,
+} from "../../types/courses";
 
 const CourseForm: React.FC = () => {
   const dispatch = useDispatch();
   const { courseId } = useParams();
 
   const availableAuthors = useSelector(selectAuthors);
-  const course = useSelector(selectCurrentCourse);
 
   const [authors, setAuthors] = useState<Author[]>([]);
-  // State variables to store form data
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [duration, setDuration] = useState<string>("");
@@ -94,23 +95,44 @@ const CourseForm: React.FC = () => {
       return;
     }
 
-    const addCourseRequest: AddCourseRequest = {
-      title: title,
-      description: description,
-      duration: parseInt(duration, 10),
-      authors: authors.map((author) => author.id),
-      handleSuccess: () => {
-        navigate(COURSES, { replace: true });
-      },
-      handleAPIError: (code) => {
-        setErrors([`Could't create course: error code ${code}.`]);
-      },
-      handleError: (error) => {
-        setErrors([`Creation course failed: ${error}.`]);
-      },
-    };
+    if (!courseId) {
+      const addCourseRequest: AddCourseRequest = {
+        title: title,
+        description: description,
+        duration: parseInt(duration, 10),
+        authors: authors.map((author) => author.id),
+        handleSuccess: () => {
+          navigate(COURSES, { replace: true });
+        },
+        handleAPIError: (code) => {
+          setErrors([`Could't create course: error code ${code}.`]);
+        },
+        handleError: (error) => {
+          setErrors([`Creation course failed: ${error}.`]);
+        },
+      };
 
-    dispatch(courseActions.addCourse(addCourseRequest));
+      dispatch(courseActions.addCourse(addCourseRequest));
+    } else {
+      const updateCourseRequest: UpdateCourseRequest = {
+        courseId: courseId,
+        title: title,
+        description: description,
+        duration: parseInt(duration, 10),
+        authors: authors.map((author) => author.id),
+        handleSuccess: () => {
+          navigate(COURSES, { replace: true });
+        },
+        handleAPIError: (code) => {
+          setErrors([`Could't update course: error code ${code}.`]);
+        },
+        handleError: (error) => {
+          setErrors([`Update failed: ${error}.`]);
+        },
+      };
+
+      dispatch(courseActions.updateCourse(updateCourseRequest));
+    }
   };
 
   const handleNewAuthor = (e: React.MouseEvent) => {

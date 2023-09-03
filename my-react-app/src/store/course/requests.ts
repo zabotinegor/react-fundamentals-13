@@ -6,6 +6,7 @@ import {
   GetCourseResponse,
   AddCourseRequest,
   DeleteCourseRequest,
+  UpdateCourseRequest,
 } from "../../types/courses";
 
 export async function getCourseAPI(
@@ -29,6 +30,23 @@ export async function addCourseAPI(
       description: addCourseRequest.description,
       duration: addCourseRequest.duration,
       authors: addCourseRequest.authors,
+    });
+  } catch (error) {
+    return (error as AxiosError).response as Response<any>;
+  }
+}
+
+export async function updateCourseAPI(
+  updateCourseRequest: UpdateCourseRequest
+): Promise<Response<any>> {
+  try {
+    const courseId = updateCourseRequest.courseId;
+
+    return await axios.put(`${COURSES_API_URL}/${courseId}`, {
+      title: updateCourseRequest.title,
+      description: updateCourseRequest.description,
+      duration: updateCourseRequest.duration,
+      authors: updateCourseRequest.authors,
     });
   } catch (error) {
     return (error as AxiosError).response as Response<any>;
