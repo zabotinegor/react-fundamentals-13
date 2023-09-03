@@ -8,6 +8,8 @@ import { selectAuthors } from "../../../../store/authors/selectors";
 import ManageBar from "../../../../common/ManageBar/ManageBar";
 import { DeleteCourseRequest } from "../../../../types/courses";
 import { actions as courseActions } from "../../../../store/course/reducer";
+import { useNavigate } from "react-router-dom";
+import { COURSES } from "../../../../constants/Pages";
 
 interface CourseProps {
   id: string;
@@ -30,6 +32,7 @@ const Course: React.FC<CourseProps> = ({
 }) => {
   const dispatch = useDispatch();
   const authorsList = useSelector(selectAuthors);
+  const navigate = useNavigate();
 
   const handleDelete = (id: string) => {
     const request: DeleteCourseRequest = {
@@ -40,6 +43,10 @@ const Course: React.FC<CourseProps> = ({
     };
 
     dispatch(courseActions.deleteCourse(request));
+  };
+
+  const handleUpdate = (id: string) => {
+    navigate(`${COURSES}/update/${id}`, { replace: true });
   };
 
   return (
@@ -56,7 +63,7 @@ const Course: React.FC<CourseProps> = ({
           <ManageBar
             onShowClick={onShowCourseInfo}
             onDeleteClick={() => handleDelete(id)}
-            onUpdateClick={() => null}
+            onUpdateClick={() => handleUpdate(id)}
           />
         </div>
       </div>

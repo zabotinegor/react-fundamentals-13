@@ -19,26 +19,37 @@ import {
 const CourseForm: React.FC = () => {
   const dispatch = useDispatch();
   const { courseId } = useParams();
-
+  const navigate = useNavigate();
   const availableAuthors = useSelector(selectAuthors);
 
+  const [form, setForm] = useState({
+    title: "",
+    description: "",
+    duration: "",
+    newAuthorName: "",
+  });
   const [authors, setAuthors] = useState<Author[]>([]);
-  const [title, setTitle] = useState<string>("");
-  const [description, setDescription] = useState<string>("");
-  const [duration, setDuration] = useState<string>("");
-  const [newAuthorName, setNewAuthorName] = useState<string>("");
   const [errors, setErrors] = useState<string[]>([]);
+  const [loadedAuthors, setLoadedAuthors] = useState(false);
 
   useEffect(() => {
-    if (availableAuthors.length === 0) {
+    if (!loadedAuthors) {
       dispatch(authorActions.getAuthors());
-    } else if (courseId) {
+      setLoadedAuthors(true);
+    }
+  }, [dispatch, loadedAuthors]);
+
+  useEffect(() => {
+    if (courseId && availableAuthors.length > 0) {
       const request: GetCourseRequest = {
         courseId: courseId,
         handleSuccess: (course) => {
-          setTitle(course.title);
-          setDescription(course.description);
-          setDuration(course.duration.toString());
+          setForm({
+            title: course.title,
+            description: course.description,
+            duration: course.duration.toString(),
+            newAuthorName: "",
+          });
           setAuthors(
             availableAuthors.filter((author) =>
               course.authors.includes(author.id)
@@ -50,96 +61,26 @@ const CourseForm: React.FC = () => {
     }
   }, [dispatch, availableAuthors, courseId]);
 
-  const navigate = useNavigate();
+  const handleInputChange = (name: string, value: string) => {
+    setForm({
+      ...form,
+      [name]: value,
+    });
+  };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    setErrors([]);
-
-    const newErrors: string[] = [];
-
-    // Validate title
-    if (title.length < 2) {
-      newErrors.push("Title must be at least 2 characters.");
-    }
-
-    // Validate description
-    if (description.length < 2) {
-      newErrors.push("Description must be at least 2 characters.");
-    }
-
-    // Validate duration
-    if (!/^\d+$/.test(duration)) {
-      newErrors.push("Duration must be ONLY numbers.");
-    } else {
-      const parsedDuration = parseInt(duration, 10);
-      if (parsedDuration <= 0) {
-        newErrors.push("Duration must be more than 0 minutes.");
-      }
-    }
-
-    // Validate authors
-    if (authors.length === 0) {
-      newErrors.push("At least one author is required.");
-    }
-
-    if (newErrors.length > 0) {
-      setErrors(newErrors);
-      return;
-    }
-
-    const token = localStorage.getItem(TOKEN);
-    if (!token) {
-      console.error("Authorization token not found.");
-      return;
-    }
-
-    if (!courseId) {
-      const addCourseRequest: AddCourseRequest = {
-        title: title,
-        description: description,
-        duration: parseInt(duration, 10),
-        authors: authors.map((author) => author.id),
-        handleSuccess: () => {
-          navigate(COURSES, { replace: true });
-        },
-        handleAPIError: (code) => {
-          setErrors([`Could't create course: error code ${code}.`]);
-        },
-        handleError: (error) => {
-          setErrors([`Creation course failed: ${error}.`]);
-        },
-      };
-
-      dispatch(courseActions.addCourse(addCourseRequest));
-    } else {
-      const updateCourseRequest: UpdateCourseRequest = {
-        courseId: courseId,
-        title: title,
-        description: description,
-        duration: parseInt(duration, 10),
-        authors: authors.map((author) => author.id),
-        handleSuccess: () => {
-          navigate(COURSES, { replace: true });
-        },
-        handleAPIError: (code) => {
-          setErrors([`Could't update course: error code ${code}.`]);
-        },
-        handleError: (error) => {
-          setErrors([`Update failed: ${error}.`]);
-        },
-      };
-
-      dispatch(courseActions.updateCourse(updateCourseRequest));
-    }
+  const handleTextAreaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setForm({
+      ...form,
+      [name]: value,
+    });
   };
 
   const handleNewAuthor = (e: React.MouseEvent) => {
     e.preventDefault();
-
-    if (newAuthorName === "") {
-      setErrors(["Please, add name of author."]);
+    const { newAuthorName } = form;
+    if (!newAuthorName) {
+      setErrors(["Please, add the name of the author."]);
       return;
     }
 
@@ -147,7 +88,10 @@ const CourseForm: React.FC = () => {
       name: newAuthorName,
       handleSuccess: (newAuthor: Author | null) => {
         if (newAuthor) {
-          setNewAuthorName("");
+          setForm({
+            ...form,
+            newAuthorName: "",
+          });
           dispatch(authorActions.getAuthors());
         } else {
           setErrors([`Created author ${newAuthorName} is null!`]);
@@ -181,6 +125,89 @@ const CourseForm: React.FC = () => {
     setAuthors(updatedAuthors);
   };
 
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    setErrors([]);
+
+    const newErrors: string[] = [];
+
+    // Validate title
+    if (form.title.length < 2) {
+      newErrors.push("Title must be at least 2 characters.");
+    }
+
+    // Validate description
+    if (form.description.length < 2) {
+      newErrors.push("Description must be at least 2 characters.");
+    }
+
+    // Validate duration
+    if (!/^\d+$/.test(form.duration)) {
+      newErrors.push("Duration must be ONLY numbers.");
+    } else {
+      const parsedDuration = parseInt(form.duration, 10);
+      if (parsedDuration <= 0) {
+        newErrors.push("Duration must be more than 0 minutes.");
+      }
+    }
+
+    // Validate authors
+    if (authors.length === 0) {
+      newErrors.push("At least one author is required.");
+    }
+
+    if (newErrors.length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+
+    const token = localStorage.getItem(TOKEN);
+    if (!token) {
+      console.error("Authorization token not found.");
+      return;
+    }
+
+    if (!courseId) {
+      const addCourseRequest: AddCourseRequest = {
+        title: form.title,
+        description: form.description,
+        duration: parseInt(form.duration, 10),
+        authors: authors.map((author) => author.id),
+        handleSuccess: () => {
+          navigate(COURSES, { replace: true });
+        },
+        handleAPIError: (code) => {
+          setErrors([`Couldn't create course: error code ${code}.`]);
+        },
+        handleError: (error) => {
+          setErrors([`Creation course failed: ${error}.`]);
+        },
+      };
+
+      dispatch(courseActions.addCourse(addCourseRequest));
+    } else {
+      const updateCourseRequest: UpdateCourseRequest = {
+        courseId: courseId,
+        title: form.title,
+        description: form.description,
+        duration: parseInt(form.duration, 10),
+        authors: authors.map((author) => author.id),
+        handleSuccess: () => {
+          navigate(COURSES, { replace: true });
+        },
+        handleAPIError: (code) => {
+          setErrors([`Couldn't update course: error code ${code}.`]);
+        },
+        handleError: (error) => {
+          setErrors([`Update failed: ${error}.`]);
+        },
+      };
+
+      dispatch(courseActions.updateCourse(updateCourseRequest));
+    }
+  };
+
   return (
     <div className="create-course-container">
       <h2 className="create-course-title">
@@ -194,8 +221,8 @@ const CourseForm: React.FC = () => {
           <Input
             type="text"
             placeholder="Title"
-            value={title}
-            onChange={setTitle}
+            value={form.title}
+            onChange={(value) => handleInputChange("title", value)}
           />
         </div>
         <div className="create-course-field">
@@ -205,8 +232,9 @@ const CourseForm: React.FC = () => {
           <textarea
             className="create-course-input create-course-textarea"
             placeholder="Description"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
+            name="description"
+            value={form.description}
+            onChange={handleTextAreaChange}
           />
         </div>
         <div className="create-course-field">
@@ -216,8 +244,8 @@ const CourseForm: React.FC = () => {
           <Input
             type="text"
             placeholder="Duration in minutes"
-            value={duration}
-            onChange={setDuration}
+            value={form.duration}
+            onChange={(value) => handleInputChange("duration", value)}
           />
         </div>
         <div className="create-course-authors">
@@ -238,8 +266,8 @@ const CourseForm: React.FC = () => {
               <Input
                 type="text"
                 placeholder="Author's Name"
-                value={newAuthorName}
-                onChange={setNewAuthorName}
+                value={form.newAuthorName}
+                onChange={(value) => handleInputChange("newAuthorName", value)}
               />
               <Button
                 className="create-add-author-button"
