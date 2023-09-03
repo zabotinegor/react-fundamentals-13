@@ -22,6 +22,9 @@ export function* getCourse(action: Action<GetCourseRequest>) {
     if (response.status === 200) {
       yield put(actions.setCurrentCourse(response));
       yield put(actions.setCurrentCourseIsLoading(false));
+      if (action.payload.handleSuccess && response.data?.result) {
+        action.payload.handleSuccess(response.data.result);
+      }
     } else if (action.payload.handleAPIError) {
       action.payload.handleAPIError(response.status);
     }

@@ -17,6 +17,7 @@ export const initialState: UserState = {
   email: "",
   token: "",
   role: null,
+  isLoading: false,
 };
 
 export const UserReducer = createSlice({
@@ -64,6 +65,9 @@ export const UserReducer = createSlice({
     },
     getUserInfo: (state: any, action: Action<Request>) => {
       // Empty body
+    },
+    setUserInfoIsLoading: (state: UserState, action: Action<boolean>) => {
+      state.isLoading = action.payload;
     },
   },
 });

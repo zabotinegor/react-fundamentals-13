@@ -1,6 +1,5 @@
-import React from "react";
 import { useSelector } from "react-redux";
-import { selectRole } from "../store/user/selectors";
+import { selectRole, selectUserInfoIsLoading } from "../store/user/selectors";
 import { Role } from "../types/user";
 import { Navigate } from "react-router-dom";
 import { NOACCESS } from "../constants/Pages";
@@ -15,6 +14,11 @@ const RolePrivateRoute: React.FC<RolePrivateRouteProps> = ({
   children,
 }) => {
   const userRole = useSelector(selectRole);
+  const isUserLoading = useSelector(selectUserInfoIsLoading);
+
+  if (!userRole || isUserLoading) {
+    return null;
+  }
 
   if (userRole && requiredRoles.includes(userRole)) {
     return children;

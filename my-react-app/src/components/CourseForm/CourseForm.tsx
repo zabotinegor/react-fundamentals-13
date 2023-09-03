@@ -1,31 +1,55 @@
-import "./CreateCourse.css";
+import "./CourseForm.css";
 
 import React, { useEffect, useState } from "react";
 import Input from "../../common/Input/Input";
 import Button from "../../common/Button/Button";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { COURSES, TOKEN } from "../../constants/Pages";
 import { useDispatch, useSelector } from "react-redux";
 import { selectAuthors } from "../../store/authors/selectors";
 import { actions as authorActions } from "../../store/authors/reducer";
 import { actions as courseActions } from "../../store/course/reducer";
 import { Author, CreateAuthorRequest } from "../../types/authors";
-import { AddCourseRequest } from "../../types/courses";
+import { AddCourseRequest, GetCourseRequest } from "../../types/courses";
+import { selectCurrentCourse } from "../../store/course/selectors";
 
-const CreateCourse: React.FC = () => {
+const CourseForm: React.FC = () => {
   const dispatch = useDispatch();
+  const { courseId } = useParams();
+
+  const availableAuthors = useSelector(selectAuthors);
+  const course = useSelector(selectCurrentCourse);
+
+  const [authors, setAuthors] = useState<Author[]>([]);
+  // State variables to store form data
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [duration, setDuration] = useState<string>("");
-  const [authors, setAuthors] = useState<Author[]>([]);
   const [newAuthorName, setNewAuthorName] = useState<string>("");
   const [errors, setErrors] = useState<string[]>([]);
-  const navigate = useNavigate();
-  const availableAuthors = useSelector(selectAuthors);
 
   useEffect(() => {
-    dispatch(authorActions.getAuthors());
-  }, []);
+    if (availableAuthors.length === 0) {
+      dispatch(authorActions.getAuthors());
+    } else if (courseId) {
+      const request: GetCourseRequest = {
+        courseId: courseId,
+        handleSuccess: (course) => {
+          setTitle(course.title);
+          setDescription(course.description);
+          setDuration(course.duration.toString());
+          setAuthors(
+            availableAuthors.filter((author) =>
+              course.authors.includes(author.id)
+            )
+          );
+        },
+      };
+      dispatch(courseActions.getCurrentCourse(request));
+    }
+  }, [dispatch, availableAuthors, courseId]);
+
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -137,7 +161,9 @@ const CreateCourse: React.FC = () => {
 
   return (
     <div className="create-course-container">
-      <h2 className="create-course-title">Create New Course</h2>
+      <h2 className="create-course-title">
+        {courseId ? "Edit Course" : "Create New Course"}
+      </h2>
       <form className="create-course-form" onSubmit={handleSubmit}>
         <div className="create-course-field">
           <label className="create-course-label" htmlFor="title">
@@ -224,7 +250,7 @@ const CreateCourse: React.FC = () => {
         </div>
         <div className="button-list">
           <Button
-            text="Create Course"
+            text={courseId ? "Update Course" : "Create Course"}
             className="create-course-create-button"
           />
           <Button
@@ -238,4 +264,4 @@ const CreateCourse: React.FC = () => {
   );
 };
 
-export default CreateCourse;
+export default CourseForm;

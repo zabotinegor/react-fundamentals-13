@@ -22,7 +22,9 @@ const CourseInfo: React.FC = () => {
 
   useEffect(() => {
     dispatch(authorsActions.getAuthors());
-    dispatch(courseActions.getCurrentCourse({ courseId: courseId }));
+    if (courseId) {
+      dispatch(courseActions.getCurrentCourse({ courseId: courseId }));
+    }
   }, []);
 
   const handleBackToCourses = () => {

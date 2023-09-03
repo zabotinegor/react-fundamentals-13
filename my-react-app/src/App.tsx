@@ -7,6 +7,7 @@ import {
   COURSEADD,
   COURSEINFO,
   COURSES,
+  COURSEUPDATE,
   LOGIN,
   NOACCESS,
   REGISTRATION,
@@ -14,9 +15,9 @@ import {
 import AuthPrivateRoute from "./routes/AuthPrivateRoute";
 import CourseInfo from "./components/CourseInfo/CourseInfo";
 import RolePrivateRoute from "./routes/RolesPrivateRoute";
-import CreateCourse from "./components/CreateCourse/CreateCourse";
 import { Role } from "./types/user";
 import NoAccess from "./components/NoAccess/NoAccess";
+import CourseForm from "./components/CourseForm/CourseForm";
 
 function App() {
   return (
@@ -49,7 +50,15 @@ function MainContent() {
         path={COURSEADD}
         element={
           <RolePrivateRoute requiredRoles={[Role.admin]}>
-            <CreateCourse />
+            <CourseForm />
+          </RolePrivateRoute>
+        }
+      />
+      <Route
+        path={COURSEUPDATE}
+        element={
+          <RolePrivateRoute requiredRoles={[Role.admin]}>
+            <CourseForm />
           </RolePrivateRoute>
         }
       />

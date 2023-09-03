@@ -5,7 +5,7 @@ import "./Input.css";
 interface InputProps {
   type: "text" | "password";
   placeholder?: string;
-  value: string;
+  value: string | number;
   onChange: (value: string) => void;
 }
 

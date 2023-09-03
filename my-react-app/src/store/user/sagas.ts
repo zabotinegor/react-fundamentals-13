@@ -75,16 +75,21 @@ export function* logoutUser(action: Action<LogoutRequest>) {
 
 export function* getUserInfo(action: Action<Request>) {
   try {
+    yield put(actions.setUserInfoIsLoading(true));
+
     const response: Response<GetUserInfoResponse> = yield call(userMeAPI);
 
     if (response.status === 200) {
       yield put(actions.setUserInfo(response));
+      yield put(actions.setUserInfoIsLoading(false));
     } else if (action.payload.handleAPIError) {
       action.payload.handleAPIError(response.status);
+      yield put(actions.setUserInfoIsLoading(false));
     }
   } catch (error) {
     if (action.payload.handleError) {
       action.payload.handleError(error);
+      yield put(actions.setUserInfoIsLoading(false));
     }
   }
 }

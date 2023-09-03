@@ -9,6 +9,7 @@ export interface UserState extends User {
   isAuth: boolean;
   token: string;
   role: Role | null;
+  isLoading: boolean;
 }
 
 export interface LoginRequest extends Request {

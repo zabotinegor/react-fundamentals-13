@@ -9,3 +9,4 @@ export const selectUserToken = (state: State): string => state.user.token;
 export const selectRole = (state: State): Role | null => state.user.role;
 export const selectStorageToken = (): string | null =>
   localStorage.getItem(TOKEN);
+export const selectUserInfoIsLoading = (state: State) => state.user.isLoading;

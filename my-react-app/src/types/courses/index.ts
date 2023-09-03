@@ -20,7 +20,8 @@ export interface CourseState {
 }
 
 export interface GetCourseRequest extends Request {
-  courseId: string | undefined;
+  courseId: string;
+  handleSuccess?: (course: Course) => void;
 }
 
 export interface GetCourseResponse {
