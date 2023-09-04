@@ -15,14 +15,14 @@ import {
   selectIsCoursesLoading,
 } from "../../store/courses/selectors";
 import { GetCoursesRequest } from "../../types/courses";
-import { selectRole } from "../../store/user/selectors"; // Import the selector for user's role
+import { selectRole } from "../../store/user/selectors";
 import { Role } from "../../types/user";
 
 const Courses: React.FC = () => {
   const dispatch = useDispatch();
   const courses = useSelector(selectCourses);
   const coursesLoading = useSelector(selectIsCoursesLoading);
-  const userRole = useSelector(selectRole); // Get the user's role from the Redux store
+  const userRole = useSelector(selectRole);
   const [coursesRequest, setCoursesRequest] = useState<GetCoursesRequest>({
     searchTerm: "",
   });
@@ -52,7 +52,7 @@ const Courses: React.FC = () => {
         searchTerm={coursesRequest.searchTerm || ""}
         setSearchTerm={(newSearchTerm) =>
           setCoursesRequest({
-            searchTerm: newSearchTerm.trim(),
+            searchTerm: newSearchTerm,
           })
         }
         onSearch={handleSearchBar}
@@ -62,12 +62,11 @@ const Courses: React.FC = () => {
         <div className="loading-icon">Loading...</div>
       ) : (
         <>
-          {userRole === Role.admin &&
-            courses.length !== 0 && ( // Check if user's role is "admin"
-              <div className="add-course-button-container">
-                <Button text="Add New Course" onClick={handleAddCourse} />
-              </div>
-            )}
+          {userRole === Role.admin && courses.length !== 0 && (
+            <div className="add-course-button-container">
+              <Button text="Add New Course" onClick={handleAddCourse} />
+            </div>
+          )}
           {courses.length === 0 ? (
             <EmptyCourseList />
           ) : (
