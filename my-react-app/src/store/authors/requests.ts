@@ -1,14 +1,18 @@
-import {
-  CreateAuthorRequest,
-  CreateAuthorResponse,
-  GetAuthorsResponse,
-} from "./../../types/index";
 import axios, { AxiosError } from "axios";
 import { AUTHORS_ADD_API_URL, AUTHORS_ALL_API_URL } from "../../constants/API";
-import { Response } from "../../types";
+import { Response } from "../../types/common";
+import {
+  GetAuthorsResponse,
+  CreateAuthorRequest,
+  CreateAuthorResponse,
+} from "../../types/authors";
 
-export function getAuthorsAPI(): Promise<Response<GetAuthorsResponse>> {
-  return axios.get(AUTHORS_ALL_API_URL);
+export async function getAuthorsAPI(): Promise<Response<GetAuthorsResponse>> {
+  try {
+    return await axios.get(AUTHORS_ALL_API_URL);
+  } catch (error) {
+    return (error as AxiosError).response as Response<any>;
+  }
 }
 
 export async function createAuthorAPI(
@@ -17,19 +21,8 @@ export async function createAuthorAPI(
   const name = createAuthorRequest.name;
 
   try {
-    return await axios.post(
-      AUTHORS_ADD_API_URL,
-      { name: name },
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: createAuthorRequest.token,
-        },
-      }
-    );
+    return await axios.post(AUTHORS_ADD_API_URL, { name: name });
   } catch (error) {
-    const axiosError = error as AxiosError;
-
-    return axiosError.response as Response<any>;
+    return (error as AxiosError).response as Response<any>;
   }
 }

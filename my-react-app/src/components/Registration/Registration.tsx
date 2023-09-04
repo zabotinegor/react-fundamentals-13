@@ -5,9 +5,9 @@ import { Link, useNavigate } from "react-router-dom";
 import Input from "../../common/Input/Input";
 import Button from "../../common/Button/Button";
 import { LOGIN } from "../../constants/Pages";
-import { RegisterRequest } from "../../types";
 import { actions } from "../../store/user/reducer";
 import { useDispatch } from "react-redux";
+import { RegisterRequest } from "../../types/user";
 
 const Registration: React.FC = () => {
   const dispatch = useDispatch();
@@ -38,7 +38,7 @@ const Registration: React.FC = () => {
       handleError: () => setErrors({ error: "An error occurred" }),
     };
 
-    dispatch(actions.registerRequest(registerRequest));
+    dispatch(actions.registerUser(registerRequest));
   };
 
   return (

@@ -14,12 +14,15 @@ import {
   selectCourses,
   selectIsCoursesLoading,
 } from "../../store/courses/selectors";
-import { GetCoursesRequest } from "../../types";
+import { GetCoursesRequest } from "../../types/courses";
+import { selectRole } from "../../store/user/selectors";
+import { Role } from "../../types/user";
 
 const Courses: React.FC = () => {
   const dispatch = useDispatch();
   const courses = useSelector(selectCourses);
   const coursesLoading = useSelector(selectIsCoursesLoading);
+  const userRole = useSelector(selectRole);
   const [coursesRequest, setCoursesRequest] = useState<GetCoursesRequest>({
     searchTerm: "",
   });
@@ -49,17 +52,17 @@ const Courses: React.FC = () => {
         searchTerm={coursesRequest.searchTerm || ""}
         setSearchTerm={(newSearchTerm) =>
           setCoursesRequest({
-            searchTerm: newSearchTerm.trim(),
+            searchTerm: newSearchTerm,
           })
         }
         onSearch={handleSearchBar}
         onReset={handleBackToCourses}
       />
       {coursesLoading ? (
-        <div className="loading-icon">Loading...</div> // Display loading icon or message
+        <div className="loading-icon">Loading...</div>
       ) : (
         <>
-          {courses.length !== 0 && (
+          {userRole === Role.admin && courses.length !== 0 && (
             <div className="add-course-button-container">
               <Button text="Add New Course" onClick={handleAddCourse} />
             </div>

@@ -1,15 +1,17 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { Update, createSlice } from "@reduxjs/toolkit";
 import {
-  Action,
-  Response,
   CourseState,
   GetCourseResponse,
   GetCourseRequest,
   AddCourseRequest,
-} from "../../types";
+  DeleteCourseRequest,
+  CoursesState,
+  UpdateCourseRequest,
+} from "../../types/courses";
+import { Action, Response } from "../../types/common";
 
 export const initialState: CourseState = {
-  currentCourse: undefined,
+  currentCourse: null,
   isLoading: false,
 };
 
@@ -21,12 +23,9 @@ export const CourseReducer = createSlice({
       state: CourseState,
       action: Action<Response<GetCourseResponse>>
     ) => {
-      state.currentCourse = action.payload.data?.result;
+      state.currentCourse = action.payload.data?.result || null;
     },
-    getCurrentCourse: (
-      state: CourseState,
-      action: Action<GetCourseRequest>
-    ) => {
+    getCurrentCourse: (state: any, action: Action<GetCourseRequest>) => {
       // Empty body
     },
 
@@ -38,6 +37,14 @@ export const CourseReducer = createSlice({
     },
 
     addCourse: (state: any, action: Action<AddCourseRequest>) => {
+      // Empty body
+    },
+
+    deleteCourse: (state: any, action: Action<DeleteCourseRequest>) => {
+      // Empty body
+    },
+
+    updateCourse: (state: any, action: Action<UpdateCourseRequest>) => {
       // Empty body
     },
   },

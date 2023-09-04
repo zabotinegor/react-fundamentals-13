@@ -1,20 +1,24 @@
-import { GetCoursesRequest } from "./../../types/index";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import {
   COURSES_ALL_API_URL,
   COURSES_FILTERED_API_URL,
 } from "../../constants/API";
-import { Response, GetCoursesResponse } from "../../types";
+import { Response } from "../../types/common";
+import { GetCoursesRequest, GetCoursesResponse } from "../../types/courses";
 
-export function getCoursesAPI(
+export async function getCoursesAPI(
   getCoursesRequest: GetCoursesRequest
 ): Promise<Response<GetCoursesResponse>> {
-  if (getCoursesRequest.searchTerm && getCoursesRequest.searchTerm !== "") {
-    const params = {
-      title: getCoursesRequest.searchTerm,
-    };
-    return axios.get(COURSES_FILTERED_API_URL, { params });
-  } else {
-    return axios.get(COURSES_ALL_API_URL);
+  try {
+    if (getCoursesRequest.searchTerm && getCoursesRequest.searchTerm !== "") {
+      const params = {
+        title: getCoursesRequest.searchTerm,
+      };
+      return await axios.get(COURSES_FILTERED_API_URL, { params });
+    } else {
+      return await axios.get(COURSES_ALL_API_URL);
+    }
+  } catch (error) {
+    return (error as AxiosError).response as Response<any>;
   }
 }

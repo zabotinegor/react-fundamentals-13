@@ -1,12 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { Action } from "../interfaces";
+import { Action, Response } from "../../types/common";
 import {
-  Response,
   AuthorsState,
   GetAuthorsResponse,
   CreateAuthorRequest,
-  CreateAuthorResponse,
-} from "../../types";
+} from "../../types/authors";
 
 export const initialState: AuthorsState = {
   authors: [],
@@ -23,7 +21,7 @@ export const AuthorsReducer = createSlice({
     ) => {
       state.authors = action.payload.data?.result || [];
     },
-    getAuthors: (state: AuthorsState) => {
+    getAuthors: (state: any) => {
       // Empty body
     },
 
@@ -31,7 +29,7 @@ export const AuthorsReducer = createSlice({
       state.isLoading = action.payload;
     },
 
-    addAuthor: (state: AuthorsState, action: Action<CreateAuthorRequest>) => {
+    addAuthor: (state: any, action: Action<CreateAuthorRequest>) => {
       // Empty body
     },
   },

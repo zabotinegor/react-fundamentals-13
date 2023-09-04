@@ -11,22 +11,20 @@ import { actions as courseActions } from "../../store/course/reducer";
 import { actions as authorsActions } from "../../store/authors/reducer";
 import { selectAuthors } from "../../store/authors/selectors";
 import { getAuthorsList } from "../../helpers/getAuthorsList";
-import {
-  selectCurrentCourse,
-  selectIsCurrentCourseLoading,
-} from "../../store/course/selectors";
+import { selectCurrentCourse } from "../../store/course/selectors";
 
 const CourseInfo: React.FC = () => {
   const dispatch = useDispatch();
   const { courseId } = useParams<{ courseId: string }>();
   const course = useSelector(selectCurrentCourse);
   const authorsList = useSelector(selectAuthors);
-  const isCourseLoading = useSelector(selectIsCurrentCourseLoading);
   const navigate = useNavigate();
 
   useEffect(() => {
     dispatch(authorsActions.getAuthors());
-    dispatch(courseActions.getCurrentCourse({ courseId: courseId }));
+    if (courseId) {
+      dispatch(courseActions.getCurrentCourse({ courseId: courseId }));
+    }
   }, []);
 
   const handleBackToCourses = () => {

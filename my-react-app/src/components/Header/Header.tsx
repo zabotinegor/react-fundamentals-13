@@ -1,52 +1,29 @@
 import "./Header.css";
 
-import React, { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import logo from "./components/Logo/logo.png";
 import Button from "../../common/Button/Button";
 import { LOGIN, REGISTRATION, TOKEN } from "../../constants/Pages";
-import { LogoutRequest } from "../../types";
 import { useDispatch, useSelector } from "react-redux";
 import { actions } from "../../store/user/reducer";
 import { selectUser } from "../../store/user/selectors";
+import { LogoutRequest } from "../../types/user";
 
 const Header: React.FC = () => {
   const dispatch = useDispatch();
   const location = useLocation();
   const navigate = useNavigate();
-  const userInfo = useSelector(selectUser);
-
-  const removeSensetiveData = () => {
-    localStorage.removeItem(TOKEN);
-    navigate(LOGIN);
-  };
+  const user = useSelector(selectUser);
 
   const handleLogout = () => {
     const logoutRequest: LogoutRequest = {
-      token: localStorage.getItem(TOKEN) || "",
       handleSuccess: () => {
-        removeSensetiveData();
-      },
-      handleAPIError: () => {
-        console.error("API error occurred");
-        removeSensetiveData();
-      },
-      handleError: (error) => {
-        console.error(error);
-        removeSensetiveData();
+        navigate(LOGIN);
       },
     };
 
-    dispatch(actions.logoutRequest(logoutRequest));
+    dispatch(actions.logoutUser(logoutRequest));
   };
-
-  useEffect(() => {
-    if (userInfo.name === "") {
-      dispatch(
-        actions.userMeRequest({ token: localStorage.getItem(TOKEN) || "" })
-      );
-    }
-  }, []);
 
   const renderHeaderContent = () => {
     if (location.pathname !== LOGIN && location.pathname !== REGISTRATION) {
@@ -56,8 +33,8 @@ const Header: React.FC = () => {
             <img src={logo} alt="Logo" />
           </div>
           <div className="button-container">
-            {userInfo.name && (
-              <span className="username">Welcome, {userInfo.name}! </span>
+            {user.name && (
+              <span className="username">Welcome, {user.name}! </span>
             )}
             <Button text="Logout" onClick={handleLogout} />
           </div>

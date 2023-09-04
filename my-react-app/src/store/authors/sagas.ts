@@ -1,8 +1,12 @@
-import { CreateAuthorRequest, CreateAuthorResponse } from "./../../types/index";
 import { takeEvery, call, put } from "typed-redux-saga";
 import { actions } from "./reducer";
 import { createAuthorAPI, getAuthorsAPI } from "./requests";
-import { Action, Response, GetAuthorsResponse } from "../../types";
+import { Action, Response } from "../../types/common";
+import {
+  GetAuthorsResponse,
+  CreateAuthorRequest,
+  CreateAuthorResponse,
+} from "../../types/authors";
 
 export function* getAuthors() {
   try {

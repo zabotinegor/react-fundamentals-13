@@ -1,11 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
 import {
-  Action,
-  Response,
   CoursesState,
-  GetCoursesResponse,
   GetCoursesRequest,
-} from "../../types";
+  GetCoursesResponse,
+} from "../../types/courses";
+import { Action, Response } from "../../types/common";
 
 export const initialState: CoursesState = {
   courses: [],
@@ -22,12 +21,18 @@ export const CoursesReducer = createSlice({
     ) => {
       state.courses = action.payload.data?.result || [];
     },
-    getCourses: (state: CoursesState, action: Action<GetCoursesRequest>) => {
+    getCourses: (state: any, action: Action<GetCoursesRequest>) => {
       // Empty body
     },
 
     setCoursesIsLoading: (state: CoursesState, action: Action<boolean>) => {
       state.isLoading = action.payload;
+    },
+
+    removeCourse: (state: CoursesState, action: Action<string>) => {
+      state.courses = state.courses.filter(
+        (course) => course.id != action.payload
+      );
     },
   },
 });

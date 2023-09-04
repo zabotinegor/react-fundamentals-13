@@ -1,18 +1,17 @@
-import {
-  LoginRequest,
-  LogoutRequest,
-  RegisterRequest,
-  UserMeRequest,
-  UserMeResponse,
-} from "./../../types/index";
 import axios, { AxiosError } from "axios";
-import { Response, LoginResponse } from "../../types";
 import {
   LOGIN_API_URL,
   LOGOUT_API_URL,
   REGISTER_API_URL,
   USERS_ME_API_URL,
 } from "../../constants/API";
+import {
+  LoginRequest,
+  LoginResponse,
+  RegisterRequest,
+  GetUserInfoResponse,
+} from "../../types/user";
+import { Response } from "../../types/common";
 
 export async function loginUserAPI(
   loginRequest: LoginRequest
@@ -23,9 +22,7 @@ export async function loginUserAPI(
       password: loginRequest.loginData.password,
     });
   } catch (error) {
-    const axiosError = error as AxiosError;
-
-    return axiosError.response as Response<LoginResponse>;
+    return (error as AxiosError).response as Response<any>;
   }
 }
 
@@ -39,42 +36,22 @@ export async function registerUserAPI(
       password: registerRequest.password,
     });
   } catch (error) {
-    const axiosError = error as AxiosError;
-
-    return axiosError.response as Response<any>;
+    return (error as AxiosError).response as Response<any>;
   }
 }
 
-export async function logoutUserAPI(
-  registerRequest: LogoutRequest
-): Promise<Response<any>> {
+export async function logoutUserAPI(): Promise<Response<any>> {
   try {
-    return await axios.delete(LOGOUT_API_URL, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: registerRequest.token,
-      },
-    });
+    return await axios.delete(LOGOUT_API_URL);
   } catch (error) {
-    const axiosError = error as AxiosError;
-
-    return axiosError.response as Response<any>;
+    return (error as AxiosError).response as Response<any>;
   }
 }
 
-export async function userMeAPI(
-  userMeRequest: UserMeRequest
-): Promise<Response<UserMeResponse>> {
+export async function userMeAPI(): Promise<Response<GetUserInfoResponse>> {
   try {
-    return await axios.get(USERS_ME_API_URL, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: userMeRequest.token,
-      },
-    });
+    return await axios.get(USERS_ME_API_URL);
   } catch (error) {
-    const axiosError = error as AxiosError;
-
-    return axiosError.response as Response<any>;
+    return (error as AxiosError).response as Response<any>;
   }
 }

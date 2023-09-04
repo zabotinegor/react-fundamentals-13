@@ -7,7 +7,7 @@ import Input from "../../common/Input/Input";
 import Button from "../../common/Button/Button";
 import { COURSES, REGISTRATION, TOKEN } from "../../constants/Pages";
 import { actions } from "../../store/user/reducer";
-import { LoginRequest } from "../../types";
+import { LoginRequest } from "../../types/user";
 
 const Login: React.FC = () => {
   const dispatch = useDispatch();
@@ -27,15 +27,14 @@ const Login: React.FC = () => {
 
     const loginRequest: LoginRequest = {
       loginData: { email, password },
-      handleSuccess: (token) => {
-        localStorage.setItem(TOKEN, token);
+      handleSuccess: () => {
         navigate(COURSES, { replace: true });
       },
       handleAPIError: () => setErrors({ email: "Invalid email or password" }),
       handleError: () => setErrors({ email: "An error occurred" }),
     };
 
-    dispatch(actions.loginRequest(loginRequest));
+    dispatch(actions.loginUser(loginRequest));
   };
 
   return (
