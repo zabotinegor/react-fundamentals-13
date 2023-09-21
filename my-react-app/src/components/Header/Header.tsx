@@ -21,20 +21,19 @@ const Header: React.FC = () => {
         navigate(LOGIN);
       },
     };
-
     dispatch(actions.logoutUser(logoutRequest));
   };
 
   const renderHeaderContent = () => {
-    if (location.pathname !== LOGIN && location.pathname !== REGISTRATION) {
+    if (location?.pathname !== LOGIN && location?.pathname !== REGISTRATION) {
       return (
         <>
           <div className="logo">
             <img src={logo} alt="Logo" />
           </div>
           <div className="button-container">
-            {user.name && (
-              <span className="username">Welcome, {user.name}! </span>
+            {user?.name && (
+              <span className="username">Welcome, {user?.name}! </span>
             )}
             <Button text="Logout" onClick={handleLogout} />
           </div>
